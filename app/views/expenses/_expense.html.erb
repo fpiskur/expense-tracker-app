@@ -1,0 +1,8 @@
+<div>
+  <%= link_to expense.description, expense_path(expense) %>
+  <div>
+    <%= button_to 'Delete', expense_path(expense), method: :delete %>
+    <%= link_to 'Edit', edit_expense_path(expense) %>
+  </div>
+</div>
+
