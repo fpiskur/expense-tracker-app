@@ -6,6 +6,11 @@
 @import "config/normalize";
 @import "config/reset";
 
+// Components
+@import "components/navbar";
+@import "components/btn";
+@import "components/list_item";
+
 // Layouts
 @import "layouts/container";
 @import "layouts/header";

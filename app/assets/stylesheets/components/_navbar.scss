@@ -1,0 +1,40 @@
+.navbar {
+  display: flex;
+  gap: var(--space-xl);
+
+  &__logo {
+    display: inline-block;
+    align-self: center;
+    padding: var(--space-s) 0;
+    background-color: transparent;
+    font-size: var(--font-size-xxl);
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    outline: none;
+
+    &:hover,
+    &:focus,
+    &:focus-within,
+    &:active {
+      transition: none;
+    }
+  }
+
+  &__menu,
+  &__user-actions {
+    display: flex;
+    align-self: stretch;
+    align-items: center;
+    line-height: var(--line-height-body);
+    list-style: none;
+  }
+
+    &__menu {
+      gap: inherit;
+    }
+
+  &__user-actions {
+    margin-left: auto;
+  }
+}

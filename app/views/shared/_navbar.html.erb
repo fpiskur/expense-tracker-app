@@ -1,13 +1,20 @@
-<nav>
-  <ul>
-    <% if !current_user %>
-      <li><%= link_to 'Sign up', new_user_registration_path %></li>
-      <li><%= link_to 'Log in', new_user_session_path %></li>
-    <% else %>
-      <li><%= link_to 'Edit profile', edit_user_registration_path %></li>
-      <li><%= button_to 'Log out', destroy_user_session_path, method: :delete %></li>
+<nav class='container navbar'>
+  <div class='navbar__logo'>
+    <%= link_to 'Expense Tracker', root_path %>
+  </div>
+  <ul class='navbar__menu'>
+    <% if current_user %>
       <li><%= link_to 'Expenses', expenses_path %></li>
       <li><%= link_to 'Categories', categories_path %></li>
+    <% end %>
+  </ul>
+  <ul class='navbar__user-actions'>
+    <% if !current_user %>
+      <li><%= link_to 'Sign up', new_user_registration_path, class: 'btn' %></li>
+      <li><%= link_to 'Log in', new_user_session_path, class: 'btn btn--dark' %></li>
+    <% else %>
+      <li><%= link_to 'Edit profile', edit_user_registration_path, class: 'btn' %></li>
+      <li><%= button_to 'Log out', destroy_user_session_path, method: :delete, class: 'btn btn--dark' %></li>
     <% end %>
   </ul>
 </nav>
