@@ -1,3 +1,11 @@
-// Configuration
-@import "config/normalize.scss"
+// Mixins
+@import "mixins/media";
 
+// Configuration
+@import "config/variables";
+@import "config/normalize";
+@import "config/reset";
+
+// Layouts
+@import "layouts/container";
+@import "layouts/header";

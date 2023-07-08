@@ -17,7 +17,7 @@ class ExpensesController < ApplicationController
     if @expense.save
       redirect_to expenses_path, notice: 'Expense was successfully created'
     else
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -27,7 +27,7 @@ class ExpensesController < ApplicationController
     if @expense.update(expense_params)
       redirect_to expenses_path, notice: 'Expense was successfully updated'
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -46,4 +46,3 @@ class ExpensesController < ApplicationController
     params.require(:expense).permit(:date, :amount, :description, :category_id)
   end
 end
-

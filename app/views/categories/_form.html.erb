@@ -1,0 +1,21 @@
+<%= form_with model: category do |f| %>
+  <% if category.errors.any? %>
+    <div id="error-explanation">
+      <h3><%= pluralize(category.errors.count, 'error') %> detected:</h3>
+      <ul>
+        <% category.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+  </div>
+
+  <div>
+    <%= f.submit 'Add' %>
+  </div>
+<% end %>
