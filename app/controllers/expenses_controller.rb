@@ -1,5 +1,6 @@
 class ExpensesController < ApplicationController
   before_action :set_expense, only: [:show, :edit, :update, :destroy]
+  before_action :set_categories, only: [:new, :create, :edit, :update]
 
   def index
     @expenses = Expense.all
@@ -40,6 +41,10 @@ class ExpensesController < ApplicationController
 
   def set_expense
     @expense = Expense.find(params[:id])
+  end
+
+  def set_categories
+    @parent_categories = Category.parent_categories
   end
 
   def expense_params
