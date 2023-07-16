@@ -1,0 +1,19 @@
+.category-wrapper {
+  display: flex;
+
+  &--parent,
+  &--child {
+    display: flex;
+    flex-direction: column;
+    width: 8rem;
+    gap: .2rem;
+  }
+
+  &--child {
+    margin-left: .2rem;
+  }
+
+  &--child > div > label:not(:last-child) {
+    margin-bottom: .2rem;
+  }
+}
