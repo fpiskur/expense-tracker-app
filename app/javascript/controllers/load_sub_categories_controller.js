@@ -6,6 +6,7 @@ export default class extends Controller {
     let parentId = event.target.value;
     let subCatGroups = document.querySelectorAll('.sub-cat-group');
     let targetElement = document.getElementById(`sub-cat-${parentId}`);
+    let parentCategoryBtn = document.getElementById(`expense_category_id_${parentId}`);
 
     if (subCatGroups) {
       subCatGroups.forEach(group => {
@@ -13,6 +14,9 @@ export default class extends Controller {
       });
     }
 
-    targetElement.classList.remove('hidden');
+    if (targetElement) {
+      parentCategoryBtn.checked = false;
+      targetElement.classList.remove('hidden');
+    }
   }
 }

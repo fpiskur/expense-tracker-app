@@ -30,18 +30,20 @@
     <div class="category-wrapper" data-controller="load-sub-categories">
       <div class="category-wrapper--parent">
         <%= f.collection_radio_buttons :category_id, parent_categories, :id, :name do |b| %>
-          <%= b.label(class: 'btn btn--primary custom-radio-btn', data: { target: 'burek' }) { b.radio_button(
+          <%= b.label(class: 'btn btn--primary custom-radio-btn') { b.radio_button(
             data: { action: 'change->load-sub-categories#load' }
           ) + b.text } %>
         <% end %>
       </div>
       <div id="sub-category" class="category-wrapper--child">
         <% parent_categories.each do |parent| %>
-          <div id="sub-cat-<%= parent.id %>" class="hidden sub-cat-group">
-            <%= f.collection_radio_buttons :category_id, parent.sub_categories, :id, :name, include_hidden: false do |sub_b| %>
-                <%= sub_b.label(class: 'btn btn--primary custom-radio-btn') { sub_b.radio_button + sub_b.text } %>
-            <% end %>
-          </div>
+          <% if parent.sub_categories.present? %>
+            <div id="sub-cat-<%= parent.id %>" class="hidden sub-cat-group">
+              <%= f.collection_radio_buttons :category_id, parent.sub_categories, :id, :name, include_hidden: false do |sub_b| %>
+                  <%= sub_b.label(class: 'btn btn--primary custom-radio-btn') { sub_b.radio_button + sub_b.text } %>
+              <% end %>
+            </div>
+          <% end %>
         <% end %>
       </div>
     </div>
