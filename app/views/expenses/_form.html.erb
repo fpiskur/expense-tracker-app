@@ -26,8 +26,8 @@
   </div>
 
   <div>
-    <%= f.label :category %>
-    <div class="category-wrapper" data-controller="load-sub-categories">
+    <label>Category</label>
+    <div id="expense_category" class="category-wrapper" data-controller="load-sub-categories">
       <div class="category-wrapper--parent">
         <%= f.collection_radio_buttons :category_id, parent_categories, :id, :name do |b| %>
           <%= b.label(class: 'btn btn--primary custom-radio-btn') { b.radio_button(
