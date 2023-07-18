@@ -50,6 +50,11 @@
   </div>
 
   <div>
+    <%= f.label :areas %>
+    <%= f.collection_check_boxes :area_ids, areas, :id, :name, { multiple: true } %>
+  </div>
+
+  <div>
     <%= f.submit 'Add' %>
   </div>
 <% end %>

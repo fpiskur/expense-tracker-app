@@ -1,6 +1,7 @@
 class ExpensesController < ApplicationController
   before_action :set_expense, only: [:show, :edit, :update, :destroy]
   before_action :set_categories, only: [:new, :create, :edit, :update]
+  before_action :set_areas, only: [:new, :create, :edit, :update]
 
   def index
     @expenses = Expense.all
@@ -48,7 +49,11 @@ class ExpensesController < ApplicationController
     @parent_categories = Category.parent_categories
   end
 
+  def set_areas
+    @areas = Area.all
+  end
+
   def expense_params
-    params.require(:expense).permit(:date, :amount, :description, :category_id)
+    params.require(:expense).permit(:date, :amount, :description, :category_id, area_ids: [])
   end
 end
