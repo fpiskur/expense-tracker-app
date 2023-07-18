@@ -1,0 +1,23 @@
+.custom-check-box {
+  display: block;
+  cursor: pointer;
+  text-align: center;
+  border: var(--border-light);
+
+  &:has(> input[type="checkbox"]:checked) {
+    border: var(--border-secondary);
+  }
+
+  input[type="checkbox"] {
+    position: fixed;
+    /* Add if not using autoprefixer */
+    -webkit-appearance: none;
+    appearance: none;
+    /* For iOS < 15 to remove gradient background */
+    background-color: #fff;
+    /* Not removed via appearance */
+    margin: 0;
+    opacity: 0;
+    width: 0;
+;  }
+}

@@ -1,0 +1,27 @@
+.form-item {
+  &:not(:last-child) {
+    margin-bottom: var(--space-xs);
+  }
+
+  &:nth-last-child(2) {
+    margin-bottom: var(--space-xl);
+  }
+
+  .form-label {
+    display: inline-block;
+    width: 130px;
+  }
+
+  .group-label {
+    display: block;
+    margin-bottom: var(--space-xxs);
+  }
+
+  input[type="date"],
+  input[type="text"],
+  input[type="number"] {
+    width: 230px;
+    line-height: var(--line-height-input);
+    padding: 0 var(--space-xs);
+  }
+}

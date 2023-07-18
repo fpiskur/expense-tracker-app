@@ -4,8 +4,5 @@
 
 import { application } from "./application"
 
-import HelloController from "./hello_controller"
-application.register("hello", HelloController)
-
 import LoadSubCategoriesController from "./load_sub_categories_controller"
 application.register("load-sub-categories", LoadSubCategoriesController)

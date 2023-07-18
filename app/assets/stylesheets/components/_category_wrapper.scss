@@ -5,15 +5,15 @@
   &--child {
     display: flex;
     flex-direction: column;
-    width: 8rem;
-    gap: .2rem;
+    width: 12rem;
+    gap: var(--space-xxxs);
   }
 
   &--child {
-    margin-left: .2rem;
+    margin-left: var(--space-xxxs);
   }
 
   &--child > div > label:not(:last-child) {
-    margin-bottom: .2rem;
+    margin-bottom: var(--space-xxxs);
   }
 }

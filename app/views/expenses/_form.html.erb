@@ -10,23 +10,23 @@
     </div>
   <% end %>
 
-  <div>
-    <%= f.label :date %>
+  <div class="form-item">
+    <%= f.label :date, class: 'form-label' %>
     <%= f.date_field :date %>
   </div>
 
-  <div>
-    <%= f.label :amount %>
+  <div class="form-item">
+    <%= f.label :amount, class: 'form-label' %>
     <%= f.number_field :amount %>
   </div>
 
-  <div>
-    <%= f.label :description %>
+  <div class="form-item">
+    <%= f.label :description, class: 'form-label' %>
     <%= f.text_field :description %>
   </div>
 
-  <div>
-    <label>Category</label>
+  <div class="form-item">
+    <label class="group-label">Category</label>
     <div id="expense_category" class="category-wrapper" data-controller="load-sub-categories">
       <div class="category-wrapper--parent">
         <%= f.collection_radio_buttons :category_id, parent_categories, :id, :name do |b| %>
@@ -49,12 +49,16 @@
     </div>
   </div>
 
-  <div>
-    <%= f.label :areas %>
-    <%= f.collection_check_boxes :area_ids, areas, :id, :name, { multiple: true } %>
+  <div class="form-item">
+    <label class="group-label">Areas</label>
+    <div class="area-group">
+      <%= f.collection_check_boxes :area_ids, areas, :id, :name, { multiple: true } do |b| %>
+        <%= b.label(class: 'btn custom-check-box') { b.check_box + b.text } %>
+      <% end %>
+    </div>
   </div>
 
-  <div>
-    <%= f.submit 'Add' %>
+  <div class="form-item">
+    <%= f.submit 'Add expense', class: 'btn btn--light' %>
   </div>
 <% end %>
