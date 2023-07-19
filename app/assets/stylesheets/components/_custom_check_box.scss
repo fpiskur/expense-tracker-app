@@ -8,6 +8,12 @@
     border: var(--border-secondary);
   }
 
+  &:hover,
+  &:focus,
+  &:active {
+    background: var(--color-light);
+  }
+
   input[type="checkbox"] {
     position: fixed;
     /* Add if not using autoprefixer */
@@ -19,5 +25,5 @@
     margin: 0;
     opacity: 0;
     width: 0;
-;  }
+  }
 }

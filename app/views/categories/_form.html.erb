@@ -16,6 +16,11 @@
   </div>
 
   <div>
+    <%= f.label :parent_id, 'Parent category' %>
+    <%= f.select :parent_id, parent_categories, include_blank: true %>
+  </div>
+
+  <div>
     <%= f.submit 'Add' %>
   </div>
 <% end %>

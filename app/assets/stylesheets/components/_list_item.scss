@@ -20,4 +20,8 @@
     align-self: flex-start;
     gap: var(--space-xs);
   }
+
+  &--indented {
+    margin-left: var(--space-xxxl);
+  }
 }

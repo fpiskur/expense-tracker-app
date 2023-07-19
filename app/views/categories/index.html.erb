@@ -3,4 +3,4 @@
   <%= link_to 'New category', new_category_path, class: 'btn btn--primary' %>
 </div>
 
-<%= render @categories %>
+<%= render @categories.parent_categories %>
