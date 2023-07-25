@@ -1,0 +1,16 @@
+<%= link_to sanitize('&larr; Back to expenses'), expenses_path %>
+
+<div class='header'>
+  <h1><%= @expense.description %></h1>
+  <%= link_to 'Edit expense', edit_expense_path(@expense), class: 'btn btn--primary' %>
+</div>
+
+<div>
+  <p><%= @expense.amount %>€</p>
+  <p><%= @expense.date %></p>
+  <p><%= @expense.category.name %></p>
+  <p>
+    <%= @expense.areas.map { |area| area.name }.join(', ') %>
+  </p>
+</div>
+

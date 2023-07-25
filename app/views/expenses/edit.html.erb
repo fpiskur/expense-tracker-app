@@ -1,0 +1,7 @@
+<%= link_to sanitize('&larr; Back to expenses'), expenses_path %>
+
+<div class='header'>
+  <h1>Edit expense</h1>
+</div>
+
+<%= render 'form', expense: @expense, parent_categories: @parent_categories, areas: @areas, submit_text: 'Update expense' %>

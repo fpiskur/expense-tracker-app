@@ -16,6 +16,7 @@ class ExpensesController < ApplicationController
   def create
     @expense = Expense.new(expense_params)
     @expense.category = Category.find(expense_params[:category_id]) if expense_params[:category_id].present?
+    # @expense.build_category
 
     if @expense.save
       redirect_to expenses_path, notice: 'Expense was successfully created'
