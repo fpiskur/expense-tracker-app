@@ -1,19 +1,10 @@
 <div class='list-item'>
-  <%= link_to category.name, category_path(category) %>
-  <div class='list-item__actions'>
-    <%= button_to 'Delete', category_path(category), method: :delete, class: 'btn' %>
-    <%= link_to 'Edit', edit_category_path(category), class: 'btn btn--light' %>
-  </div>
+  <%= render 'category_list_item', category: category %>
 </div>
 <% if category.sub_categories.any? %>
   <% category.sub_categories.each do |sub_cat| %>
     <div class='list-item list-item--indented'>
-      <!-- Izvuci ovo u komponentu pa ju renderaj gore i tu dole -->
-      <%= link_to sub_cat.name, category_path(sub_cat) %>
-      <div class='list-item__actions'>
-        <%= button_to 'Delete', category_path(sub_cat), method: :delete, class: 'btn' %>
-        <%= link_to 'Edit', edit_category_path(sub_cat), class: 'btn btn--light' %>
-      </div>
+      <%= render 'category_list_item', category: sub_cat %>
     </div>
   <% end %>
 <% end %>
