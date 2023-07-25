@@ -20,7 +20,15 @@ class ExpensesController < ApplicationController
     if @expense.save
       redirect_to expenses_path, notice: 'Expense was successfully created'
     else
-      render :new, status: :unprocessable_entity
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.update(
+            'expenses-form-errors',
+            partial: 'shared/form_errors',
+            locals: { object: @expense }
+          )
+        end
+      end
     end
   end
 

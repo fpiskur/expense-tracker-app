@@ -1,14 +1,16 @@
 <%= form_with model: expense do |f| %>
-  <% if expense.errors.any? %>
-    <div id="error-explanation">
+  <%# if expense.errors.any? %>
+    <!-- <div id="error-explanation">
       <h3><%= pluralize(expense.errors.count, 'error') %> detected:</h3>
       <ul>
         <% expense.errors.full_messages.each do |msg| %>
           <li><%= msg %></li>
         <% end %>
       </ul>
-    </div>
-  <% end %>
+    </div> -->
+  <%# end %>
+
+  <%= turbo_frame_tag 'expenses-form-errors' %>
 
   <div class="form-item">
     <%= f.label :date, class: 'form-label' %>
