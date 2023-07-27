@@ -1,15 +1,6 @@
-<%= form_with model: expense do |f| %>
-  <%# if expense.errors.any? %>
-    <!-- <div id="error-explanation">
-      <h3><%= pluralize(expense.errors.count, 'error') %> detected:</h3>
-      <ul>
-        <% expense.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
-        <% end %>
-      </ul>
-    </div> -->
-  <%# end %>
+<% hidden_class = expense.category_id %>
 
+<%= form_with model: expense do |f| %>
   <%= turbo_frame_tag 'expenses-form-errors' %>
 
   <div class="form-item">
@@ -32,7 +23,8 @@
     <div id="expense_category" class="category-wrapper" data-controller="load-sub-categories">
       <div class="category-wrapper--parent">
         <%= f.collection_radio_buttons :category_id, parent_categories, :id, :name do |b| %>
-          <%= b.label(class: 'btn btn--primary custom-radio-btn') { b.radio_button(
+          <% button_class = expense.category_id && b.object.sub_categories.pluck(:id).include?(expense.category_id) ? 'btn--light' : 'btn--primary' %>
+          <%= b.label(class: "btn #{button_class} custom-radio-btn") { b.radio_button(
             data: { action: 'change->load-sub-categories#load' }
           ) + b.text } %>
         <% end %>
@@ -40,7 +32,8 @@
       <div id="sub-category" class="category-wrapper--child">
         <% parent_categories.each do |parent| %>
           <% if parent.sub_categories.present? %>
-            <div id="sub-cat-<%= parent.id %>" class="hidden sub-cat-group">
+            <% hidden_class = expense.category_id && parent.sub_categories.pluck(:id).include?(expense.category_id) ? '' : 'hidden' %>
+            <div id="sub-cat-<%= parent.id %>" class="<%= hidden_class %> sub-cat-group">
               <%= f.collection_radio_buttons :category_id, parent.sub_categories, :id, :name, include_hidden: false do |sub_b| %>
                   <%= sub_b.label(class: 'btn btn--primary custom-radio-btn') { sub_b.radio_button + sub_b.text } %>
               <% end %>
