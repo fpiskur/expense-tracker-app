@@ -24,6 +24,7 @@
       <div class="category-wrapper--parent">
         <%= f.collection_radio_buttons :category_id, parent_categories, :id, :name do |b| %>
           <% button_class = expense.category_id && b.object.sub_categories.pluck(:id).include?(expense.category_id) ? 'btn--light' : 'btn--primary' %>
+
           <%= b.label(class: "btn #{button_class} custom-radio-btn") { b.radio_button(
             data: { action: 'change->load-sub-categories#load' }
           ) + b.text } %>
@@ -33,6 +34,7 @@
         <% parent_categories.each do |parent| %>
           <% if parent.sub_categories.present? %>
             <% hidden_class = expense.category_id && parent.sub_categories.pluck(:id).include?(expense.category_id) ? '' : 'hidden' %>
+
             <div id="sub-cat-<%= parent.id %>" class="<%= hidden_class %> sub-cat-group">
               <%= f.collection_radio_buttons :category_id, parent.sub_categories, :id, :name, include_hidden: false do |sub_b| %>
                   <%= sub_b.label(class: 'btn btn--primary custom-radio-btn') { sub_b.radio_button + sub_b.text } %>
