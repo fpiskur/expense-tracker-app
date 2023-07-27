@@ -39,7 +39,15 @@ class ExpensesController < ApplicationController
     if @expense.update(expense_params)
       redirect_to expenses_path, notice: 'Expense was successfully updated'
     else
-      render :edit, status: :unprocessable_entity
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.update(
+            'expenses-form-errors',
+            partial: 'shared/form_errors',
+            locals: { object: @expense }
+          )
+        end
+      end
     end
   end
 

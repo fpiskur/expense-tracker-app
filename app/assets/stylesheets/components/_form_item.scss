@@ -24,4 +24,15 @@
     line-height: var(--line-height-input);
     padding: 0 var(--space-xs);
   }
+
+  input[type="number"].amount {
+    width: 200px;
+  }
+
+  .currency {
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    vertical-align: middle;
+    margin-left: var(--space-xxxs);
+  }
 }
