@@ -6,3 +6,6 @@ import { application } from "./application"
 
 import LoadSubCategoriesController from "./load_sub_categories_controller"
 application.register("load-sub-categories", LoadSubCategoriesController)
+
+import ToggleCategoriesController from "./toggle_categories_controller"
+application.register("toggle-categories", ToggleCategoriesController)

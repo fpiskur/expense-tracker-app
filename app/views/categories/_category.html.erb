@@ -1,10 +1,16 @@
-<div class='list-item'>
-  <%= render 'category_list_item', category: category %>
-</div>
-<% if category.sub_categories.any? %>
-  <% category.sub_categories.each do |sub_cat| %>
-    <div class='list-item list-item--indented'>
-      <%= render 'category_list_item', category: sub_cat %>
+<% parent_class = category.sub_categories.any? ? 'list-item__parent' : '' %>
+
+<div>
+  <div class='list-item <%= parent_class %>'>
+    <%= render 'category_list_item', category: category %>
+  </div>
+  <% if category.sub_categories.any? %>
+    <div id="sub-cat-group-<%= category.id %>" class='hidden'>
+      <% category.sub_categories.each do |sub_cat| %>
+        <div class='list-item list-item--indented'>
+          <%= render 'category_list_item', category: sub_cat %>
+        </div>
+      <% end %>
     </div>
   <% end %>
-<% end %>
+</div>

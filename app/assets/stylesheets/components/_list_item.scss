@@ -24,4 +24,24 @@
   &--indented {
     margin-left: var(--space-xxxl);
   }
+
+  &__parent {
+    .category-name {
+      cursor: pointer;
+    }
+
+    .category-name::before {
+      font-size: var(--font-size-xs);
+      vertical-align: text-bottom;
+      margin-right: var(--space-xs);
+    }
+  
+    .category-name.closed::before {
+      content: "▶";
+    }
+  
+    .category-name.opened::before {
+      content: "▼";
+    }
+  }
 }
