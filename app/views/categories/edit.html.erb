@@ -1,0 +1,8 @@
+<%= link_to sanitize('&larr; Back to categories'), categories_path %>
+
+<div class='header'>
+  <h1>New category</h1>
+</div>
+
+<% parent_categories_list = @category.sub_categories.any? ? [] : @parent_categories.filter { |cat| cat != @category } %>
+<%= render 'form', category: @category, parent_categories: parent_categories_list.pluck(:name, :id), submit_text: 'Update category' %>

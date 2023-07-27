@@ -33,7 +33,7 @@
       </div>
       <div id="sub-category" class="category-wrapper--child">
         <% parent_categories.each do |parent| %>
-          <% if parent.sub_categories.present? %>
+          <% if parent.sub_categories.any? %>
             <% hidden_class = expense.category_id && parent.sub_categories.pluck(:id).include?(expense.category_id) ? '' : 'hidden' %>
 
             <div id="sub-cat-<%= parent.id %>" class="<%= hidden_class %> sub-cat-group">

@@ -4,4 +4,4 @@
   <h1>New category</h1>
 </div>
 
-<%= render 'form', category: @category, parent_categories: @parent_categories.pluck(:name, :id) %>
+<%= render 'form', category: @category, parent_categories: @parent_categories.pluck(:name, :id), submit_text: 'Add category' %>

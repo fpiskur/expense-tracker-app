@@ -15,12 +15,14 @@
     <%= f.text_field :name %>
   </div>
 
-  <div>
-    <%= f.label :parent_id, 'Parent category' %>
-    <%= f.select :parent_id, parent_categories, include_blank: true %>
-  </div>
+  <% if parent_categories.any? %>
+    <div>
+      <%= f.label :parent_id, 'Parent category' %>
+      <%= f.select :parent_id, parent_categories, include_blank: true %>
+    </div>
+  <% end %>
 
   <div>
-    <%= f.submit 'Add' %>
+    <%= f.submit submit_text %>
   </div>
 <% end %>
