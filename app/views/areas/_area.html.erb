@@ -1,0 +1,7 @@
+<div class='list-item'>
+  <%= area.name %>
+  <div class='list-item__actions'>
+    <%= button_to 'Delete', area_path(area), method: :delete, class: 'btn' %>
+    <%= link_to 'Edit', edit_area_path(area), class: 'btn btn--light' %>
+  </div>
+</div>

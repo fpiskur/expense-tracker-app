@@ -1,0 +1,7 @@
+<%= link_to sanitize('&larr; Back to areas'), areas_path %>
+
+<div class='header'>
+  <h1>New area</h1>
+</div>
+
+<%= render 'form', area: @area, submit_text: 'Add area' %>

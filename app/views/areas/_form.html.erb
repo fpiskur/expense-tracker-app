@@ -1,0 +1,21 @@
+<%= form_with model: area do |f| %>
+  <% if area.errors.any? %>
+    <div id="error-explanation">
+      <h3><%= pluralize(area.errors.count, 'error') %> detected:</h3>
+      <ul>
+        <% area.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-item">
+    <%= f.label :name, class: 'form-label' %>
+    <%= f.text_field :name %>
+  </div>
+
+  <div class="form-item">
+    <%= f.submit submit_text, class: 'btn btn--light' %>
+  </div>
+<% end %>

@@ -1,7 +1,7 @@
 <%= link_to sanitize('&larr; Back to categories'), categories_path %>
 
 <div class='header'>
-  <h1>New category</h1>
+  <h1>Edit category</h1>
 </div>
 
 <% parent_categories_list = @category.sub_categories.any? ? [] : @parent_categories.filter { |cat| cat != @category } %>
