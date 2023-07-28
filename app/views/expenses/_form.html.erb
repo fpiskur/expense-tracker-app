@@ -10,7 +10,7 @@
 
   <div class="form-item">
     <%= f.label :amount, class: 'form-label' %>
-    <%= f.number_field :amount, class: 'amount' %>
+    <%= f.number_field :amount, step: 0.01, class: 'amount' %>
     <span class="currency">€</span>
   </div>
 

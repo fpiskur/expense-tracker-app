@@ -1,5 +1,13 @@
+<% category_name = expense.category.parent_category.present? ? "#{expense.category.parent_category.name} &rarr; " : '' %>
+<% category_name += "#{expense.category.name}" %>
+
 <div class='list-item'>
-  <%= link_to expense.description, expense_path(expense) %>
+  <div class='list-item__amount'><%= expense.amount %>€</div>
+  <div class='list-item__info'>
+    <div><%= expense.description %></div>
+    <div class='category'><%= raw category_name %></div>
+    <div class='areas'><%= raw expense.areas.pluck(:name).join('<span class="spacer">|</span>') %></div>
+  </div>
   <div class='list-item__actions'>
     <%= button_to 'Delete', expense_path(expense), method: :delete, class: 'btn' %>
     <%= link_to 'Edit', edit_expense_path(expense), class: 'btn btn--light' %>
