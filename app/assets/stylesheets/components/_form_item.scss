@@ -19,10 +19,15 @@
 
   input[type="date"],
   input[type="text"],
-  input[type="number"] {
+  input[type="number"],
+  select {
     width: 230px;
     line-height: var(--line-height-input);
     padding: 0 var(--space-xs);
+  }
+
+  select {
+    height: 2.05rem;
   }
 
   input[type="number"].amount {

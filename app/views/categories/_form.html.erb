@@ -10,19 +10,19 @@
     </div>
   <% end %>
 
-  <div>
-    <%= f.label :name %>
+  <div class="form-item">
+    <%= f.label :name, class: 'form-label' %>
     <%= f.text_field :name %>
   </div>
 
   <% if parent_categories.any? %>
-    <div>
-      <%= f.label :parent_id, 'Parent category' %>
-      <%= f.select :parent_id, parent_categories, include_blank: true %>
+    <div class="form-item">
+      <%= f.label :parent_id, 'Parent category', class: 'form-label' %>
+      <%= f.select :parent_id, parent_categories, include_blank: '-- root category --' %>
     </div>
   <% end %>
 
-  <div>
-    <%= f.submit submit_text %>
+  <div class="form-item">
+    <%= f.submit submit_text, class: 'btn btn--light' %>
   </div>
 <% end %>
