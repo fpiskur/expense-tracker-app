@@ -13,9 +13,9 @@ class Expense < ApplicationRecord
     if month
       where("EXTRACT(MONTH FROM date) = ?", month)
         .and(where("EXTRACT(YEAR FROM date) = ?", year))
-        .order(date: :desc)
+        .order(date: :desc, created_at: :desc)
     else
-      where("EXTRACT(YEAR FROM date) = ?", year).order(date: :desc)
+      where("EXTRACT(YEAR FROM date) = ?", year).order(date: :desc, created_at: :desc)
     end
   end
 
