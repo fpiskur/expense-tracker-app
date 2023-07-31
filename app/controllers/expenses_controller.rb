@@ -4,7 +4,15 @@ class ExpensesController < ApplicationController
   before_action :set_areas, only: [:new, :create, :edit, :update]
 
   def index
-    @expenses = Expense.all
+    if params[:month] && params[:year]
+      @expenses = Expense.get_expenses_by_date(month: params[:month], year: params[:year])
+    elsif params[:month].nil? && params[:year]
+      @expenses = Expense.get_expenses_by_date(year: params[:year])
+    elsif params[:month] && params[:year].nil?
+      @expenses = Expense.get_expenses_by_date(month: params[:month])
+    else
+      @expenses = Expense.get_expenses_by_date(month: Date.current.month)
+    end
   end
 
   def show; end
