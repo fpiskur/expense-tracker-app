@@ -13,6 +13,8 @@ class ExpensesController < ApplicationController
     else
       @expenses = Expense.get_expenses_by_date(month: Date.current.month)
     end
+
+    @expenses = @expenses.group_by(&:date)
   end
 
   def show; end

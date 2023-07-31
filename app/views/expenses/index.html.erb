@@ -4,7 +4,14 @@
 </div>
 
 <% if @expenses.any? %>
-  <%= render @expenses %>
+  <% @expenses.each do |date, expenses| %>
+    <p class='list-item__date'>
+      <span class='day'><%= date.day %></span>
+      <span class='day-name'><%= date.strftime('%a') %></span>
+      <span class='month-year'><%= date.strftime('%m/%Y.') %></span>
+    </p>
+    <%= render expenses %>
+  <% end %>
 <% else %>
   <div>No expenses available</div>
 <% end %>

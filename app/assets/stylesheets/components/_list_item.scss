@@ -79,4 +79,20 @@
       }
     }
   }
+
+  &__date {
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-xxxs);
+
+    .day {
+      font-weight: 600;
+    }
+
+    .day-name {
+      font-weight: 600;
+      background: var(--color-white);
+      border: var(--border-light);
+      padding: var(--space-xxxs);
+    }
+  }
 }
