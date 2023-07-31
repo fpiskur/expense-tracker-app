@@ -10,8 +10,10 @@
 
   &:hover,
   &:focus,
+  &:focus-within,
   &:active {
     background: var(--color-light);
+    color: var(--color-text-body);
   }
 
   input[type="checkbox"] {

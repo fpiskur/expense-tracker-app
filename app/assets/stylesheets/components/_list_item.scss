@@ -46,21 +46,27 @@
     }
   }
 
-  &__amount {
-    font-size: var(--font-size-l);
-    font-weight: 600;
+  &__category {
     align-self: center;
     width: var(--space-xxxxl);
-    text-align: right;
+
+    .category {
+      font-size: var(--font-size-xs);
+      color: var(--color-text-muted);
+    }
   }
 
   &__info {
     border-left: var(--border-light);
     padding-left: var(--space-m);
 
-    .category {
-      font-size: var(--font-size-xs);
-      color: var(--color-text-muted);
+    .description {
+      color: var(--color-primary);
+    }
+
+    .amount {
+      font-size: var(--font-size-l);
+      font-weight: 600;
     }
 
     .areas {

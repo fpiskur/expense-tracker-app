@@ -1,11 +1,11 @@
-<% category_name = expense.category.parent_category.present? ? "#{expense.category.parent_category.name} &rarr; " : '' %>
-<% category_name += "#{expense.category.name}" %>
-
 <div class='list-item'>
-  <div class='list-item__amount'><%= expense.amount %>€</div>
+  <div class='list-item__category'>
+    <div><%= expense.category.name %></div>
+    <div class='category'><%= expense.category&.parent_category&.name %></div>
+  </div>
   <div class='list-item__info'>
-    <div><%= expense.description %></div>
-    <div class='category'><%= raw category_name %></div>
+    <div class='description'><%= expense.description %></div>
+    <div class='amount'><%= format("%.2f", expense.amount) %> €</div>
     <div class='areas'><%= raw expense.areas.pluck(:name).join('<span class="spacer">|</span>') %></div>
   </div>
   <div class='list-item__actions'>
