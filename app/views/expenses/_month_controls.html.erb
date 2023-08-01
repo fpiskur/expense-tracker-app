@@ -1,9 +1,51 @@
 <div class='month-controls'>
-  <span class='controls'><%= link_to sanitize('&larr; Prev'),
-                                     expenses_path(month: @date.prev_month.month, year: @date.prev_month.year),
-                                     class: 'btn btn--light' %></span>
-  <span class='current-month'><%= @date.strftime("%B %Y") %></span>
-  <span class='controls'><%= link_to sanitize('Next &rarr;'),
-                                     expenses_path(month: @date.next_month.month, year: @date.next_month.year),
-                                     class: 'btn btn--light' %></span>
+  <div class='month-controls__incremental'>
+    <span class='controls'><%= link_to sanitize('&larr; Prev'),
+                                      expenses_path(month: @date.prev_month.month, year: @date.prev_month.year),
+                                      class: 'btn btn--light' %></span>
+    <span class='current-month'><%= @date.strftime("%B %Y") %></span>
+    <span class='controls'><%= link_to sanitize('Next &rarr;'),
+                                      expenses_path(month: @date.next_month.month, year: @date.next_month.year),
+                                      class: 'btn btn--light' %></span>
+  </div>
+
+  <div class='month-controls__manual'>
+    <div class='month'>
+      <label>Month</label>
+      <select>
+        <option>Jan</option>
+        <option>Feb</option>
+        <option>Mar</option>
+        <option>Apr</option>
+        <option>May</option>
+        <option>Jun</option>
+        <option>Jul</option>
+        <option>Aug</option>
+        <option>Sep</option>
+        <option>Oct</option>
+        <option>Nov</option>
+        <option>Dec</option>
+      </select>
+    </div>
+    <div class='year'>
+      <label>Year</label>
+      <select>
+        <option>2019</option>
+        <option>2020</option>
+        <option>2021</option>
+        <option>2022</option>
+        <option>2023</option>
+      </select>
+    </div>
+  </div>
 </div>
+
+<script>
+  (function() {
+    let parentElement = document.querySelector(".month-controls");
+    let fixedChild = document.querySelector(".month-controls__manual");
+
+    let parentWidth = getComputedStyle(parentElement).width;
+    fixedChild.style.width = parentWidth;
+  })();
+</script>

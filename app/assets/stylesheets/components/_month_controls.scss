@@ -1,11 +1,29 @@
 .month-controls {
-  display: flex;
-  margin-bottom: var(--space-m);
+  position: relative;
+  width: fit-content;
+
+  &__incremental {
+    display: flex;
+    margin-bottom: var(--space-m);
 
   .current-month {
-    font-size: var(--font-size-xl);
-    font-weight: 600;
-    margin: 0 var(--space-m);
-    align-self: center;
+      font-size: var(--font-size-xl);
+      font-weight: 600;
+      margin: 0 var(--space-m);
+      align-self: center;
+    }
+  }
+
+  &__manual {
+    display: flex;
+    gap: var(--space-xl);
+    position: fixed;
+    // width: 100%;
+    background: var(--color-glint);
+    padding: var(--space-l);
+
+    label {
+      display: block;
+    }
   }
 }
