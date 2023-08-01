@@ -1,51 +1,31 @@
-<div class='month-controls'>
+<div class='month-controls' data-controller='date-modal'>
   <div class='month-controls__incremental'>
     <span class='controls'><%= link_to sanitize('&larr; Prev'),
                                       expenses_path(month: @date.prev_month.month, year: @date.prev_month.year),
                                       class: 'btn btn--light' %></span>
-    <span class='current-month'><%= @date.strftime("%B %Y") %></span>
+    <span class='current-month' data-action='click->date-modal#toggle'><%= @date.strftime("%B %Y") %></span>
     <span class='controls'><%= link_to sanitize('Next &rarr;'),
                                       expenses_path(month: @date.next_month.month, year: @date.next_month.year),
                                       class: 'btn btn--light' %></span>
   </div>
 
-  <div class='month-controls__manual'>
-    <div class='month'>
-      <label>Month</label>
-      <select>
-        <option>Jan</option>
-        <option>Feb</option>
-        <option>Mar</option>
-        <option>Apr</option>
-        <option>May</option>
-        <option>Jun</option>
-        <option>Jul</option>
-        <option>Aug</option>
-        <option>Sep</option>
-        <option>Oct</option>
-        <option>Nov</option>
-        <option>Dec</option>
-      </select>
+  <div class='month-controls__manual hidden'>
+    <%= form_with url: expenses_path, method: :get do |f| %>
+      <div class='inputs'>
+        <div class='month'>
+          <%= f.label :month %>
+          <%= f.select :month, (1..12).map { |month| [Date::MONTHNAMES[month], month] } %>
+        </div>
+        <div class='year'>
+          <%= f.label :year %>
+          <%= f.select :year, (2019..2023).to_a %>
+        </div>
+      </div>
+      <div class='buttons'>
+        <%= link_to 'current', expenses_path, class: 'btn btn--light' %>
+        <%= f.submit "Submit", class: 'btn btn--primary' %>
+      </div>
+      <%= link_to 'close', '#', class: 'close-btn', data: { action: 'click->date-modal#toggle' } %>
     </div>
-    <div class='year'>
-      <label>Year</label>
-      <select>
-        <option>2019</option>
-        <option>2020</option>
-        <option>2021</option>
-        <option>2022</option>
-        <option>2023</option>
-      </select>
-    </div>
-  </div>
+  <% end %>
 </div>
-
-<script>
-  (function() {
-    let parentElement = document.querySelector(".month-controls");
-    let fixedChild = document.querySelector(".month-controls__manual");
-
-    let parentWidth = getComputedStyle(parentElement).width;
-    fixedChild.style.width = parentWidth;
-  })();
-</script>

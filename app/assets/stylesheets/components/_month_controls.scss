@@ -11,19 +11,57 @@
       font-weight: 600;
       margin: 0 var(--space-m);
       align-self: center;
+      cursor: pointer;
+
+      &:hover,
+      &:active,
+      &:focus,
+      &:focus-within {
+        color: var(--color-primary);
+      }
     }
   }
 
   &__manual {
-    display: flex;
-    gap: var(--space-xl);
     position: fixed;
-    // width: 100%;
-    background: var(--color-glint);
+    background: var(--color-light);
+    border: var(--border-dark);
     padding: var(--space-l);
+
+    .month,
+    .month select,
+    .year,
+    .year select {
+      width: 100%;
+    }
+
+    .inputs {
+      display: flex;
+      gap: var(--space-m);
+      margin-bottom: var(--space-m);
+    }
 
     label {
       display: block;
+    }
+
+    select {
+      line-height: var(--line-height-input);
+      padding: 0 var(--space-xs);
+      height: 2.05rem;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .close-btn {
+      display: block;
+      text-align: right;
+      line-height: 1;
+      margin-top: var(--space-l);
     }
   }
 }

@@ -4,6 +4,9 @@
 
 import { application } from "./application"
 
+import DateModalController from "./date_modal_controller"
+application.register("date-modal", DateModalController)
+
 import LoadSubCategoriesController from "./load_sub_categories_controller"
 application.register("load-sub-categories", LoadSubCategoriesController)
 
