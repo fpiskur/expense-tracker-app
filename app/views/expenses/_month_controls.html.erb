@@ -1,0 +1,9 @@
+<div class='month-controls'>
+  <span class='controls'><%= link_to sanitize('&larr; Prev'),
+                                     expenses_path(month: @date.prev_month.month, year: @date.prev_month.year),
+                                     class: 'btn btn--light' %></span>
+  <span class='current-month'><%= @date.strftime("%B %Y") %></span>
+  <span class='controls'><%= link_to sanitize('Next &rarr;'),
+                                     expenses_path(month: @date.next_month.month, year: @date.next_month.year),
+                                     class: 'btn btn--light' %></span>
+</div>

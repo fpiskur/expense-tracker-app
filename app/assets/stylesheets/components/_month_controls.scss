@@ -1,0 +1,11 @@
+.month-controls {
+  display: flex;
+  margin-bottom: var(--space-m);
+
+  .current-month {
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    margin: 0 var(--space-m);
+    align-self: center;
+  }
+}

@@ -6,7 +6,7 @@
   <div class='list-item__info'>
     <div class='description'><%= expense.description %></div>
     <div class='amount'><%= format("%.2f", expense.amount) %> €</div>
-    <div class='areas'><%= raw expense.areas.pluck(:name).join('<span class="spacer">|</span>') %></div>
+    <div class='areas'><%= sanitize(expense.areas.pluck(:name).join('<span class="spacer">|</span>')) %></div>
   </div>
   <div class='list-item__actions'>
     <%= button_to 'Delete', expense_path(expense), method: :delete, class: 'btn' %>
