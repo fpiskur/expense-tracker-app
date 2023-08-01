@@ -14,11 +14,11 @@
       <div class='inputs'>
         <div class='month'>
           <%= f.label :month %>
-          <%= f.select :month, (1..12).map { |month| [Date::MONTHNAMES[month], month] } %>
+          <%= f.select :month, (1..12).map { |month| [Date::MONTHNAMES[month], month] }, selected: @date.month %>
         </div>
         <div class='year'>
           <%= f.label :year %>
-          <%= f.select :year, (2019..2023).to_a %>
+          <%= f.select :year, (2019..2023).to_a, selected: @date.year %>
         </div>
       </div>
       <div class='buttons'>
