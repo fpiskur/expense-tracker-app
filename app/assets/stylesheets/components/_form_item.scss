@@ -26,6 +26,16 @@
     padding: 0 var(--space-xs);
   }
 
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
+
+  input[type="number"] {
+    appearance: auto;
+    -moz-appearance: textfield;
+  }
+
   select {
     height: 2.05rem;
   }
