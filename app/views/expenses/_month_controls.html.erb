@@ -22,8 +22,8 @@
         </div>
       </div>
       <div class='buttons'>
-        <%= link_to 'current', expenses_path, class: 'btn btn--light' %>
-        <%= f.submit "Submit", class: 'btn btn--primary' %>
+        <%= link_to 'current', expenses_path, class: 'btn btn--light', data: { action: 'click->date-modal#toggle' } %>
+        <%= f.submit "Submit", class: 'btn btn--primary', data: { action: 'click->date-modal#toggle' } %>
       </div>
       <%= link_to 'close', '#', class: 'close-btn', data: { action: 'click->date-modal#toggle' } %>
     </div>
