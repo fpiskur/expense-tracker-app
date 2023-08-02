@@ -120,24 +120,24 @@
 # years = (2010..2023).to_a
 # amounts = (1..100).to_a + [54.72, 65.5, 3.6, 65.45, 8.47, 9.52, 7.15, 56.2, 5.58, 3.21, 7.40]
 
-# 130_000.times do |i|
+# 10_000.times do |i|
 #   Expense.create!(
 #     description: SecureRandom.hex.first(20),
 #     amount: amounts.sample,
 #     date: Date.new(years.sample, months.sample, days.sample),
 #     category_id: categories.sample.id
 #   )
-#   puts "#{i}. expense created out of 130,000"
+#   puts "#{i}. expense created out of 10,000"
 # end
 
 # expenses = Expense.all.to_a
 
-# 60_000.times do |j|
+# 5_000.times do |j|
 #   ExpensesArea.create!(
 #     {
 #       expense_id: expenses.sample.id,
 #       area_id: areas.sample.id
 #     }
 #   )
-#   puts "#{j}. expense_area created out of 60,000"
+#   puts "#{j}. expense_area created out of 5,000"
 # end
