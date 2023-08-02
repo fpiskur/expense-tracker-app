@@ -47,6 +47,8 @@ gem "bootsnap", require: false
 
 gem 'devise'
 
+gem 'chartkick'
+
 # Use Sass to process CSS
 # gem "sassc-rails"
 

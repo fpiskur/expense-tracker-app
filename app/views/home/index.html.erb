@@ -4,3 +4,13 @@
   <%= link_to 'Add expense', new_expense_path %>
 </div>
 
+<%= line_chart Expense.where("EXTRACT(MONTH FROM date) = ?", 7)
+  .and(Expense.where("EXTRACT(YEAR FROM date) = ?", 2023))
+  .group(:date).count %>
+
+<hr style='margin: 3rem 0;'>
+
+<%= pie_chart Expense.where("EXTRACT(MONTH FROM date) = ?", 7)
+  .and(Expense.where("EXTRACT(YEAR FROM date) = ?", 2023))
+  .joins(:category)
+  .group('categories.name').count %>
