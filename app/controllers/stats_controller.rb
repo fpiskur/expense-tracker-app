@@ -1,8 +1,8 @@
 class StatsController < ApplicationController
   def index
     # GRAPH
-    filter = params[:period] # 'year' / 'month' / 'day'
-    period = case filter
+    @filter = params[:period] || 'month' # 'year' / 'month' / 'day'
+    period = case @filter
              when 'month'
                'day'
              when 'year'
@@ -18,7 +18,7 @@ class StatsController < ApplicationController
     # info = 'sum/total' / 'average'
 
     # GENERAL
-    # heading =
+    @heading = 'Something went wrong, check the StatsController'
     # options = [months] / [years]
     selected_option = params[:selected_option]
 
@@ -43,6 +43,10 @@ class StatsController < ApplicationController
     month = Date.current.month
     year = JSON.parse(selected_option)[1].to_i if selected_option
     month = JSON.parse(selected_option)[0].to_i if selected_option
+
+    @heading = Date.new(year, month).strftime('%B %Y.')
+    @total = Expense.get_expenses_by_date(month: month, year: year).sum(:amount)
+
     Expense.group_by_period('day', :date,
                                    range: Date.new(year, month)..Date.new(year, month).end_of_month)
                                    .sum(:amount)
@@ -52,6 +56,9 @@ class StatsController < ApplicationController
   def handle_month_period(selected_option)
     year = Date.current.year
     year = selected_option.to_i if selected_option
+
+    @heading = "#{year}."
+
     Expense.group_by_period('month', :date,
                                      range: Date.new(year)..Date.new(year).end_of_year)
                                      .sum(:amount)
@@ -61,6 +68,9 @@ class StatsController < ApplicationController
   def handle_year_period
     min_year = Expense.oldest_date.year
     max_year = Expense.newest_date.year
+
+    @heading = 'Max period'
+
     Expense.group_by_period('year', :date,
                                     range: Date.new(min_year)..Date.new(max_year).end_of_year)
                                     .sum(:amount)

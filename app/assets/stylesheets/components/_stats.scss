@@ -1,0 +1,20 @@
+.stats {
+  display: flex;
+  gap: var(--space-m);
+
+  .chart,
+  .aside {
+    background-color: var(--color-white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-small);
+    padding: var(--space-m);
+  }
+
+  .chart {
+    width: 70%;
+  }
+
+  .aside {
+    width: 30%;
+  }
+}

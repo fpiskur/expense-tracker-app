@@ -1,4 +1,21 @@
-<h1>Stats#index</h1>
-<p>Find me in app/views/stats/index.html.erb</p>
+<div class='header'>
+  <h1><%= @heading %></h1>
+  <div>
+    <%= link_to 'month', stats_path(period: 'month'), class: 'btn btn--light' %>
+    <%= link_to 'year', stats_path(period: 'year'), class: 'btn btn--light' %>
+    <%= link_to 'max', stats_path(period: 'max'), class: 'btn btn--light' %>
+  </div>
+</div>
 
-<%= line_chart @data %>
+<div class='stats'>
+  <div class='chart'>
+    <% if @filter == 'month' %>
+      <%= column_chart @data %>
+    <% else %>
+      <%= line_chart @data %>
+    <% end %>
+  </div>
+  <aside class='aside'>
+    TOTAL: <%= @total %> €
+  </aside>
+</div>
