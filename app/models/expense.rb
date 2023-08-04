@@ -15,6 +15,14 @@ class Expense < ApplicationRecord
       .order(date: :desc, created_at: :desc)
   end
 
+  def self.oldest_date
+    Expense.order(date: :asc).limit(1).first&.date
+  end
+
+  def self.newest_date
+    Expense.order(date: :desc).limit(1).first&.date
+  end
+
   private
 
   def parent_category_with_children_selected
