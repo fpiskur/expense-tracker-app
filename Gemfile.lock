@@ -113,6 +113,8 @@ GEM
       railties (>= 5.0.0)
     globalid (1.1.0)
       activesupport (>= 5.0)
+    groupdate (6.3.0)
+      activesupport (>= 6.1)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
     io-console (0.6.0)
@@ -265,6 +267,7 @@ DEPENDENCIES
   debug
   devise
   factory_bot_rails
+  groupdate
   jbuilder
   jsbundling-rails
   pg (~> 1.1)
