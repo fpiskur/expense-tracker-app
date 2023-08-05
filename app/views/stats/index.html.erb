@@ -10,9 +10,9 @@
 <div class='stats'>
   <div class='chart'>
     <% if @filter == 'month' %>
-      <%= column_chart @data %>
+      <%= column_chart @data, suffix: " €", round: 2, zeros: true %>
     <% else %>
-      <%= line_chart @data %>
+      <%= line_chart @data, curve: false, suffix: " €", round: 2, zeros: true %>
     <% end %>
   </div>
   <aside class='aside'>
