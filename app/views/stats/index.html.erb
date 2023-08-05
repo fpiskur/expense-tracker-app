@@ -9,11 +9,17 @@
 
 <div class='stats'>
   <div class='chart'>
-    <% if @filter == 'month' %>
-      <%= column_chart @data, suffix: " €", round: 2, zeros: true %>
-    <% else %>
-      <%= line_chart @data, curve: false, suffix: " €", round: 2, zeros: true %>
-    <% end %>
+    <div class='totals'>
+      <% if @filter == 'month' %>
+        <%= column_chart @data, suffix: " €", round: 2, zeros: true %>
+      <% else %>
+        <%= line_chart @data, curve: false, suffix: " €", round: 2, zeros: true %>
+      <% end %>
+    </div>
+    <div class='groups'>
+      <%= pie_chart @category_data %>
+      <%= pie_chart @areas_data %>
+    </div>
   </div>
   <aside class='aside'>
     TOTAL: <%= @total %> €

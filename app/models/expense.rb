@@ -25,6 +25,7 @@ class Expense < ApplicationRecord
 
   private
 
+  # Validations
   def parent_category_with_children_selected
     if self.category&.sub_categories&.any?
       errors.add(:category, 'has sub-categories. Please pick one.')

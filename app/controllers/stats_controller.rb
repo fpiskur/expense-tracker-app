@@ -23,6 +23,17 @@ class StatsController < ApplicationController
     selected_option = params[:selected_option]
 
     @data = get_relevant_data(period, selected_option)
+
+    # Temporary, example of how it works - try to refactor the get_expenses_by_date method so you can use it here
+    @category_data = Expense.joins(:category).where("EXTRACT(MONTH FROM date) = ?", 8)
+                            .and(Expense.where("EXTRACT(YEAR FROM date) = ?", 2023))
+                            .group('categories.name')
+                            .sum('expenses.amount')
+
+    @areas_data = Expense.joins(:areas).where("EXTRACT(MONTH FROM date) = ?", 8)
+                         .and(Expense.where("EXTRACT(YEAR FROM date) = ?", 2023))
+                         .group('areas.name')
+                         .sum('expenses.amount')
   end
 
   private
