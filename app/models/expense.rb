@@ -11,7 +11,7 @@ class Expense < ApplicationRecord
 
   def self.get_expenses_by_date(month: Date.current.month, year: Date.current.year)
     where("EXTRACT(MONTH FROM date) = ?", month)
-      .and(where("EXTRACT(YEAR FROM date) = ?", year))
+      .where("EXTRACT(YEAR FROM date) = ?", year)
       .order(date: :desc, created_at: :desc)
   end
 

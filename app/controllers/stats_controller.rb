@@ -2,14 +2,12 @@ class StatsController < ApplicationController
   def index
     # GRAPH
     @filter = params[:period] || 'month' # 'year' / 'month' / 'day'
-    period = case @filter
-             when 'month'
-               'day'
-             when 'year'
-               'month'
-             when 'max'
-               'year'
-             end
+    filter_to_period_map = {
+      'month' => 'day',
+      'year' => 'month',
+      'max' => 'year'
+    }
+    period = filter_to_period_map[@filter]
     # range_start =
     # range_end =
     # group_by = 'category' / 'area'
@@ -26,14 +24,19 @@ class StatsController < ApplicationController
 
     # Temporary, example of how it works - try to refactor the get_expenses_by_date method so you can use it here
     @category_data = Expense.joins(:category).where("EXTRACT(MONTH FROM date) = ?", 8)
-                            .and(Expense.where("EXTRACT(YEAR FROM date) = ?", 2023))
+                            .where("EXTRACT(YEAR FROM date) = ?", 2023)
                             .group('categories.name')
                             .sum('expenses.amount')
 
-    @areas_data = Expense.joins(:areas).where("EXTRACT(MONTH FROM date) = ?", 8)
-                         .and(Expense.where("EXTRACT(YEAR FROM date) = ?", 2023))
+    areas_expenses = Expense.joins(:areas).where("EXTRACT(MONTH FROM date) = ?", 8)
+                         .where("EXTRACT(YEAR FROM date) = ?", 2023)
                          .group('areas.name')
                          .sum('expenses.amount')
+    total_expenses_for_period = Expense.where("EXTRACT(MONTH FROM date) = ?", 8)
+                                       .where("EXTRACT(YEAR FROM date) = ?", 2023)
+                                       .sum(:amount)
+    other_expenses = total_expenses_for_period - areas_expenses.values.sum
+    @areas_data = areas_expenses.merge('Other' => other_expenses)
   end
 
   private
