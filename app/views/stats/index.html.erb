@@ -16,8 +16,13 @@
         <%= line_chart @data, curve: false, suffix: " €", round: 2, zeros: true %>
       <% end %>
     </div>
-    <div class='groups'>
-      <%= pie_chart @category_data %>
+    <h2>Categories</h2>
+    <div class='categories'>
+      <%= pie_chart @parent_category_data %>
+      <%= pie_chart @sub_category_data %>
+    </div>
+    <h2>Areas</h2>
+    <div>
       <%= pie_chart @areas_data %>
     </div>
   </div>

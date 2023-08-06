@@ -23,16 +23,33 @@ class StatsController < ApplicationController
     @data = get_relevant_data(period, selected_option)
 
     # Temporary, example of how it works - try to refactor the get_expenses_by_date method so you can use it here
-    @category_data = Expense.joins(:category).where("EXTRACT(MONTH FROM date) = ?", 8)
-                            .where("EXTRACT(YEAR FROM date) = ?", 2023)
-                            .group('categories.name')
-                            .sum('expenses.amount')
+    @sub_category_data = Expense.joins(:category).where("EXTRACT(MONTH FROM date) = ?", 6)
+                                .where("EXTRACT(YEAR FROM date) = ?", 2023)
+                                .group('categories.name')
+                                .sum('expenses.amount')
 
-    areas_expenses = Expense.joins(:areas).where("EXTRACT(MONTH FROM date) = ?", 8)
-                         .where("EXTRACT(YEAR FROM date) = ?", 2023)
-                         .group('areas.name')
-                         .sum('expenses.amount')
-    total_expenses_for_period = Expense.where("EXTRACT(MONTH FROM date) = ?", 8)
+    # @parent_category_data = Expense.joins(:category).where("EXTRACT(MONTH FROM date) = ?", 6)
+    #                           .where("EXTRACT(YEAR FROM date) = ?", 2023)
+    #                           .group('categories.parent_id')
+    #                           .sum('expenses.amount')
+
+    # Check ChatGPT history for a refactored version or make your own
+    @parent_category_data = Category.where(parent_id: nil)
+                                .joins("LEFT JOIN (
+                                        SELECT COALESCE(categories.parent_id, categories.id) AS category_id, SUM(expenses.amount) AS total_amount
+                                        FROM categories
+                                        LEFT JOIN expenses ON categories.id = expenses.category_id
+                                        WHERE expenses.date >= '2023-06-01' AND expenses.date <= '2023-06-30'
+                                        GROUP BY COALESCE(categories.parent_id, categories.id)
+                                      ) AS category_expenses ON categories.id = category_expenses.category_id")
+                                .select('categories.name as category_name, COALESCE(category_expenses.total_amount, 0) as total_amount')
+                                .map { |expense| [expense.category_name, expense.total_amount] }
+
+    areas_expenses = Expense.joins(:areas).where("EXTRACT(MONTH FROM date) = ?", 6)
+                            .where("EXTRACT(YEAR FROM date) = ?", 2023)
+                            .group('areas.name')
+                            .sum('expenses.amount')
+    total_expenses_for_period = Expense.where("EXTRACT(MONTH FROM date) = ?", 6)
                                        .where("EXTRACT(YEAR FROM date) = ?", 2023)
                                        .sum(:amount)
     other_expenses = total_expenses_for_period - areas_expenses.values.sum
