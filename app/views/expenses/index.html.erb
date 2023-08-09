@@ -7,10 +7,12 @@
 
 <% if @expenses.any? %>
   <% @expenses.each do |date, expenses| %>
+    <% day_total = expenses.reduce(0) { |sum, expense| sum + expense.amount } %>
     <p class='list-item__date'>
       <span class='day'><%= date.day %></span>
       <span class='day-name'><%= date.strftime('%a') %></span>
       <span class='month-year'><%= date.strftime('%m/%Y.') %></span>
+      <span class='day-total'><%= format("%.2f", day_total) %> €</span>
     </p>
     <%= render expenses %>
   <% end %>

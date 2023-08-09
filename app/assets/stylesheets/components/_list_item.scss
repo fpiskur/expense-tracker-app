@@ -81,6 +81,9 @@
   }
 
   &__date {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xxxs);
     color: var(--color-text-muted);
     margin-bottom: var(--space-xxxs);
 
@@ -93,6 +96,13 @@
       background: var(--color-white);
       border: var(--border-light);
       padding: var(--space-xxxs);
+      line-height: 1;
+    }
+
+    .day-total {
+      margin-left: auto;
+      margin-right: var(--space-m);
+      font-weight: 900;
     }
   }
 }
