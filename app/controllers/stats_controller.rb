@@ -53,7 +53,7 @@ class StatsController < ApplicationController
                                        .where("EXTRACT(YEAR FROM date) = ?", 2023)
                                        .sum(:amount)
     other_expenses = total_expenses_for_period - areas_expenses.values.sum
-    @areas_data = areas_expenses.merge('Other' => other_expenses)
+    @areas_data = areas_expenses.merge('No area' => other_expenses)
   end
 
   private
