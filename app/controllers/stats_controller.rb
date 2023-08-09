@@ -20,13 +20,7 @@ class StatsController < ApplicationController
     # options = [months] / [years]
     selected_option = params[:selected_option]
 
-    @data = get_relevant_data(period, selected_option)
-
-    # Temporary, example of how it works - try to refactor the get_expenses_by_date method so you can use it here
-    @sub_category_data = Expense.joins(:category).where("EXTRACT(MONTH FROM date) = ?", 6)
-                                .where("EXTRACT(YEAR FROM date) = ?", 2023)
-                                .group('categories.name')
-                                .sum('expenses.amount')
+    get_relevant_data(period, selected_option)
 
     # @parent_category_data = Expense.joins(:category).where("EXTRACT(MONTH FROM date) = ?", 6)
     #                           .where("EXTRACT(YEAR FROM date) = ?", 2023)
@@ -44,16 +38,6 @@ class StatsController < ApplicationController
                                       ) AS category_expenses ON categories.id = category_expenses.category_id")
                                 .select('categories.name as category_name, COALESCE(category_expenses.total_amount, 0) as total_amount')
                                 .map { |expense| [expense.category_name, expense.total_amount] }
-
-    areas_expenses = Expense.joins(:areas).where("EXTRACT(MONTH FROM date) = ?", 6)
-                            .where("EXTRACT(YEAR FROM date) = ?", 2023)
-                            .group('areas.name')
-                            .sum('expenses.amount')
-    total_expenses_for_period = Expense.where("EXTRACT(MONTH FROM date) = ?", 6)
-                                       .where("EXTRACT(YEAR FROM date) = ?", 2023)
-                                       .sum(:amount)
-    other_expenses = total_expenses_for_period - areas_expenses.values.sum
-    @areas_data = areas_expenses.merge('No area' => other_expenses)
   end
 
   private
@@ -76,11 +60,17 @@ class StatsController < ApplicationController
     month = JSON.parse(selected_option)[0].to_i if selected_option
 
     @heading = Date.new(year, month).strftime('%B %Y.')
-    @total = Expense.get_expenses_by_date(month: month, year: year).sum(:amount)
+    @total = total_expenses_for_period(month: month, year: year)
 
-    Expense.group_by_period('day', :date,
+    @data = Expense.group_by_period('day', :date,
                                    range: Date.new(year, month)..Date.new(year, month).end_of_month)
                                    .sum(:amount)
+    @sub_category_data = Expense.get_expenses_by_month(month: month, year: year)
+                                .joins(:category)
+                                .group('categories.name')
+                                .sum('expenses.amount')
+    other_expenses = @total - areas_expenses(month: month, year: year).values.sum
+    @areas_data = areas_expenses(month: month, year: year).merge('No area' => other_expenses)
   end
 
   # Filter: year
@@ -89,10 +79,17 @@ class StatsController < ApplicationController
     year = selected_option.to_i if selected_option
 
     @heading = "#{year}."
+    @total = total_expenses_for_period(year: year)
 
-    Expense.group_by_period('month', :date,
+    @data = Expense.group_by_period('month', :date,
                                      range: Date.new(year)..Date.new(year).end_of_year)
                                      .sum(:amount)
+    @sub_category_data = Expense.get_expenses_by_year(year: year)
+                                .joins(:category)
+                                .group('categories.name')
+                                .sum('expenses.amount')
+    other_expenses = @total - areas_expenses(year: year).values.sum
+    @areas_data = areas_expenses(year: year).merge('No area' => other_expenses)
   end
 
   # Filter: max
@@ -101,9 +98,47 @@ class StatsController < ApplicationController
     max_year = Expense.newest_date.year
 
     @heading = 'Max period'
+    @total = total_expenses_for_period
 
-    Expense.group_by_period('year', :date,
+    @data = Expense.group_by_period('year', :date,
                                     range: Date.new(min_year)..Date.new(max_year).end_of_year)
                                     .sum(:amount)
+    @sub_category_data = Expense.all
+                                .joins(:category)
+                                .group('categories.name')
+                                .sum('expenses.amount')
+    other_expenses = @total - areas_expenses.values.sum
+    @areas_data = areas_expenses.merge('No area' => other_expenses)
+  end
+
+  def areas_expenses(month: nil, year: nil)
+    if month
+      Expense.get_expenses_by_month(month: month, year: year)
+            .joins(:areas)
+            .group('areas.name')
+            .sum('expenses.amount')
+    elsif year
+      Expense.get_expenses_by_year(year: year)
+            .joins(:areas)
+            .group('areas.name')
+            .sum('expenses.amount')
+    else
+      Expense.all
+             .joins(:areas)
+             .group('areas.name')
+             .sum('expenses.amount')
+    end
+  end
+
+  def total_expenses_for_period(month: nil, year: nil)
+    if month
+      Expense.get_expenses_by_month(month: month, year: year)
+             .sum(:amount)
+    elsif year
+      Expense.get_expenses_by_year(year: year)
+             .sum(:amount)
+    else
+      Expense.all.sum(:amount)
+    end
   end
 end
