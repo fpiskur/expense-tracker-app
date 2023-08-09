@@ -1,9 +1,9 @@
 <div class='header'>
   <h1><%= @heading %></h1>
-  <div>
-    <%= link_to 'month', stats_path(period: 'month'), class: 'btn btn--light' %>
-    <%= link_to 'year', stats_path(period: 'year'), class: 'btn btn--light' %>
-    <%= link_to 'max', stats_path(period: 'max'), class: 'btn btn--light' %>
+  <div class='stats-filter'>
+    <%= link_to 'month', stats_path(period: 'month'), class: "btn btn--light #{'active' if @filter == 'month'}" %>
+    <%= link_to 'year', stats_path(period: 'year'), class: "btn btn--light #{'active' if @filter == 'year'}" %>
+    <%= link_to 'max', stats_path(period: 'max'), class: "btn btn--light #{'active' if @filter == 'max'}" %>
   </div>
 </div>
 
@@ -16,13 +16,15 @@
         <%= line_chart @data, curve: false, suffix: " €", round: 2, zeros: true %>
       <% end %>
     </div>
-    <h2>Categories</h2>
     <div class='categories'>
-      <%= pie_chart @parent_category_data %>
-      <%= pie_chart @sub_category_data %>
+      <h2>Categories</h2>
+      <div class='charts'>
+        <%= pie_chart @parent_category_data %>
+        <%= pie_chart @sub_category_data %>
+      </div>
     </div>
-    <h2>Areas</h2>
-    <div>
+    <div class='areas'>
+      <h2>Areas</h2>
       <%= pie_chart @areas_data %>
     </div>
   </div>

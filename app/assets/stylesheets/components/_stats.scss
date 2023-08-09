@@ -1,23 +1,32 @@
 .stats {
   display: flex;
   gap: var(--space-m);
+  margin-bottom: var(--space-l);
 
   .chart,
   .aside {
     background-color: var(--color-white);
     border-radius: var(--border-radius);
     box-shadow: var(--shadow-small);
-    padding: var(--space-m);
+    padding: var(--space-l);
   }
 
   .chart {
     width: 70%;
 
-    .categories {
+    .categories,
+    .areas {
+      margin-top: var(--space-l);
+
+      h2 {
+        margin-bottom: var(--space-m);
+      }
+    }
+
+    .categories .charts {
       display: flex;
       gap: var(--space-m);
       justify-content: space-between;
-      margin-top: var(--space-m);
     }
   }
 
