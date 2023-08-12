@@ -9,23 +9,17 @@ class Expense < ApplicationRecord
   validate :parent_category_with_children_selected
   validates_presence_of :amount, :date, :description, :category_id
 
-  def self.get_expenses_by_month(month: Date.current.month, year: Date.current.year, ordered: false)
-    expenses_by_month = where("EXTRACT(MONTH FROM date) = ?", month)
-                        .where("EXTRACT(YEAR FROM date) = ?", year)
-    if ordered
-      expenses_by_month.order(date: :desc, created_at: :desc)
-    else
-      expenses_by_month
+  def self.get_expenses_by_period(period, **options)
+    if period == 'year' || period == 'month'
+      expenses = where("EXTRACT(YEAR FROM date) = ?", options[:year])
     end
-  end
-
-  def self.get_expenses_by_year(year: Date.current.year, ordered: false)
-    expenses_by_year = where("EXTRACT(YEAR FROM date) = ?", year)
-    if ordered
-      expenses_by_year.order(date: :desc, created_at: :desc)
-    else
-      expenses_by_year
+    if period == 'month'
+      expenses = expenses.where("EXTRACT(MONTH FROM date) = ?", options[:month])
     end
+    if options[:ordered]
+      expenses = expenses.order(date: :desc, created_at: :desc)
+    end
+    expenses
   end
 
   def self.oldest_date

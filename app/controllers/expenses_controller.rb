@@ -6,18 +6,14 @@ class ExpensesController < ApplicationController
   def index
     if params[:month] && params[:year]
       @date = Date.new(params[:year].to_i, params[:month].to_i)
-      @expenses = Expense.get_expenses_by_month(month: params[:month], year: params[:year], ordered: true)
     elsif params[:month].nil? && params[:year]
       @date = Date.new(params[:year].to_i, Date.current.month)
-      @expenses = Expense.get_expenses_by_month(year: params[:year], ordered: true)
     elsif params[:month] && params[:year].nil?
       @date = Date.new(Date.current.year, params[:month].to_i)
-      @expenses = Expense.get_expenses_by_month(month: params[:month], ordered: true)
     else
       @date = Date.new(Date.current.year, Date.current.month)
-      @expenses = Expense.get_expenses_by_month(month: Date.current.month, ordered: true)
     end
-
+    @expenses = Expense.get_expenses_by_period('month', month: @date.month, year: @date.year, ordered: true)
     @expenses = @expenses.group_by(&:date)
   end
 

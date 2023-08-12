@@ -65,7 +65,7 @@ class StatsController < ApplicationController
     @data = Expense.group_by_period('day', :date,
                                    range: Date.new(year, month)..Date.new(year, month).end_of_month)
                                    .sum(:amount)
-    @sub_category_data = Expense.get_expenses_by_month(month: month, year: year)
+    @sub_category_data = Expense.get_expenses_by_period('month', month: month, year: year)
                                 .joins(:category)
                                 .group('categories.name')
                                 .sum('expenses.amount')
@@ -84,7 +84,7 @@ class StatsController < ApplicationController
     @data = Expense.group_by_period('month', :date,
                                      range: Date.new(year)..Date.new(year).end_of_year)
                                      .sum(:amount)
-    @sub_category_data = Expense.get_expenses_by_year(year: year)
+    @sub_category_data = Expense.get_expenses_by_period('year', year: year)
                                 .joins(:category)
                                 .group('categories.name')
                                 .sum('expenses.amount')
@@ -113,12 +113,12 @@ class StatsController < ApplicationController
 
   def areas_expenses(month: nil, year: nil)
     if month
-      Expense.get_expenses_by_month(month: month, year: year)
+      Expense.get_expenses_by_period('month', month: month, year: year)
             .joins(:areas)
             .group('areas.name')
             .sum('expenses.amount')
     elsif year
-      Expense.get_expenses_by_year(year: year)
+      Expense.get_expenses_by_period('year', year: year)
             .joins(:areas)
             .group('areas.name')
             .sum('expenses.amount')
@@ -132,10 +132,10 @@ class StatsController < ApplicationController
 
   def total_expenses_for_period(month: nil, year: nil)
     if month
-      Expense.get_expenses_by_month(month: month, year: year)
+      Expense.get_expenses_by_period('month', month: month, year: year)
              .sum(:amount)
     elsif year
-      Expense.get_expenses_by_year(year: year)
+      Expense.get_expenses_by_period('year', year: year)
              .sum(:amount)
     else
       Expense.all.sum(:amount)
