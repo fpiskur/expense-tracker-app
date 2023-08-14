@@ -1,5 +1,22 @@
 <div class='header'>
   <h1><%= @heading %></h1>
+  <% unless @filter == 'max' %>
+    <div class='controls'>
+      <%= form_with url: stats_path, method: :get do |f| %>
+        <% if @filter == 'month' %>
+          <%= f.label :month %>
+          <%= f.select :month, (1..12).map { |month| [Date::MONTHNAMES[month], month] }, selected: @date.month %>
+        <% end %>
+
+        <%= f.label :year %>
+        <%= f.select :year, (2019..2023).to_a, selected: @date.year %>
+
+        <%= f.hidden_field :period, value: @filter %>
+
+        <%= f.submit "Submit" %>
+      <% end %>
+    </div>
+  <% end %>
   <div class='stats-filter'>
     <%= link_to 'month', stats_path(period: 'month'), class: "btn btn--light #{'active' if @filter == 'month'}" %>
     <%= link_to 'year', stats_path(period: 'year'), class: "btn btn--light #{'active' if @filter == 'year'}" %>

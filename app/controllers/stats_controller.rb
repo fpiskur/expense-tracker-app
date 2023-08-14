@@ -15,12 +15,18 @@ class StatsController < ApplicationController
     # INFO
     # info = 'sum/total' / 'average'
 
+    if params[:month] && params[:year]
+      @date = Date.new(params[:year].to_i, params[:month].to_i)
+    elsif params[:year]
+      @date = Date.new(params[:year].to_i, Date.current.month)
+    else
+      @date = Date.current
+    end
+
     # GENERAL
     @heading = 'Something went wrong, check the StatsController'
-    # options = [months] / [years]
-    selected_option = params[:selected_option]
 
-    get_relevant_data(period, selected_option)
+    get_relevant_data(period)
 
     start_date = Date.new(2023, 6, 1)
     end_date = Date.new(2023, 6, 30)
@@ -69,22 +75,20 @@ class StatsController < ApplicationController
 
   private
 
-  def get_relevant_data(period, selected_option)
+  def get_relevant_data(period)
     if period == 'day'
-      handle_day_period(selected_option)
+      handle_day_period
     elsif period == 'month'
-      handle_month_period(selected_option)
+      handle_month_period
     elsif period == 'year'
       handle_year_period
     end
   end
 
   # Filter: month
-  def handle_day_period(selected_option)
-    year = Date.current.year
-    month = Date.current.month
-    year = JSON.parse(selected_option)[1].to_i if selected_option
-    month = JSON.parse(selected_option)[0].to_i if selected_option
+  def handle_day_period
+    year = @date.year
+    month = @date.month
 
     @heading = Date.new(year, month).strftime('%B %Y.')
     @total = total_expenses_for_period(month: month, year: year)
@@ -101,9 +105,8 @@ class StatsController < ApplicationController
   end
 
   # Filter: year
-  def handle_month_period(selected_option)
-    year = Date.current.year
-    year = selected_option.to_i if selected_option
+  def handle_month_period
+    year = @date.year
 
     @heading = "#{year}."
     @total = total_expenses_for_period(year: year)
