@@ -55,7 +55,7 @@ class StatsController < ApplicationController
     # @parent_category_data = Category.find_by_sql([query, start_date, end_date])
     #                             .map { |expense| [expense.category_name, expense.total_amount] }
 
-    # This version should be resistant to SQL injections
+    # This version should be resistant to SQL injections - provjeri jer nisam bas siguran s obzirom da direktno ubacuje varijable u .where()
     subquery = Expense.where(date: start_date..end_date)
                     .joins(:category)
                     .group("categories.parent_id, COALESCE(categories.parent_id, categories.id)")
