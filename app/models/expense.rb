@@ -22,6 +22,34 @@ class Expense < ApplicationRecord
     expenses
   end
 
+  def self.get_expenses_by_area(month: nil, year: nil)
+    if month && year
+      get_expenses_by_period('month', month: month, year: year)
+        .joins(:areas)
+        .group('areas.name')
+        .sum('expenses.amount')
+    elsif year
+      get_expenses_by_period('year', year: year)
+        .joins(:areas)
+        .group('areas.name')
+        .sum('expenses.amount')
+    else
+      joins(:areas)
+        .group('areas.name')
+        .sum('expenses.amount')
+    end
+  end
+
+  def self.get_total_for_period(month: nil, year: nil)
+    if month && year
+      get_expenses_by_period('month', month: month, year: year).sum(:amount)
+    elsif year
+      get_expenses_by_period('year', year: year).sum(:amount)
+    else
+      sum(:amount)
+    end
+  end
+
   def self.oldest_date
     Expense.order(date: :asc).limit(1).first&.date
   end
