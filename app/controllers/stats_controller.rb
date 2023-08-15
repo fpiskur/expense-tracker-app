@@ -1,7 +1,7 @@
 class StatsController < ApplicationController
   def index
     # GRAPH
-    @filter = params[:period] || 'month' # 'year' / 'month' / 'day'
+    @filter = params[:period] || 'month' # 'month' / 'year' / 'max'
     filter_to_period_map = {
       'month' => 'day',
       'year' => 'month',
@@ -27,50 +27,6 @@ class StatsController < ApplicationController
     @heading = 'Something went wrong, check the StatsController'
 
     get_relevant_data(period)
-
-    start_date = Date.new(2023, 6, 1)
-    end_date = Date.new(2023, 6, 30)
-    #####################################
-    # THE ORIGINAL RESPONSE, NON-DYNAMIC
-    #####################################
-    # @parent_category_data = Category.where(parent_id: nil)
-    #                             .joins("LEFT JOIN (
-    #                                     SELECT COALESCE(categories.parent_id, categories.id) AS category_id, SUM(expenses.amount) AS total_amount
-    #                                     FROM categories
-    #                                     LEFT JOIN expenses ON categories.id = expenses.category_id
-    #                                     WHERE expenses.date >= '2023-6-1' AND expenses.date <= '2023-6-30'
-    #                                     GROUP BY COALESCE(categories.parent_id, categories.id)
-    #                                   ) AS category_expenses ON categories.id = category_expenses.category_id")
-    #                             .select('categories.name as category_name, COALESCE(category_expenses.total_amount, 0) as total_amount')
-    #                             .map { |expense| [expense.category_name, expense.total_amount] }
-    #####################################
-
-    # This version is vulnerable to SQL injections, see how you can sanitize the date inputs
-    # query = <<-SQL
-    #   SELECT categories.name as category_name, COALESCE(category_expenses.total_amount, 0) as total_amount
-    #   FROM categories
-    #   LEFT JOIN (
-    #     SELECT COALESCE(categories.parent_id, categories.id) AS category_id, SUM(expenses.amount) AS total_amount
-    #     FROM categories
-    #     LEFT JOIN expenses ON categories.id = expenses.category_id
-    #     WHERE expenses.date >= ? AND expenses.date <= ?
-    #     GROUP BY COALESCE(categories.parent_id, categories.id)
-    #   ) AS category_expenses ON categories.id = category_expenses.category_id
-    #   WHERE categories.parent_id IS NULL
-    # SQL
-    # @parent_category_data = Category.find_by_sql([query, start_date, end_date])
-    #                             .map { |expense| [expense.category_name, expense.total_amount] }
-
-    # This version should be resistant to SQL injections - provjeri jer nisam bas siguran s obzirom da direktno ubacuje varijable u .where()
-    subquery = Expense.where(date: start_date..end_date)
-                    .joins(:category)
-                    .group("categories.parent_id, COALESCE(categories.parent_id, categories.id)")
-                    .select("COALESCE(categories.parent_id, categories.id) AS category_id, SUM(amount) AS total_amount")
-
-    @parent_category_data = Category.where(parent_id: nil)
-                                    .joins("LEFT JOIN (#{subquery.to_sql}) AS category_expenses ON categories.id = category_expenses.category_id")
-                                    .select("categories.name as category_name, COALESCE(category_expenses.total_amount, 0) as total_amount")
-                                    .map { |expense| [expense.category_name, expense.total_amount] }
   end
 
   private
@@ -102,6 +58,12 @@ class StatsController < ApplicationController
                                 .sum('expenses.amount')
     other_expenses = @total - areas_expenses(month: month, year: year).values.sum
     @areas_data = areas_expenses(month: month, year: year).merge('No area' => other_expenses)
+
+    subquery = Expense.get_expenses_by_period('month', month: month, year: year)
+                      .joins(:category)
+                      .group("categories.parent_id, COALESCE(categories.parent_id, categories.id)")
+                      .select("COALESCE(categories.parent_id, categories.id) AS category_id, SUM(amount) AS total_amount")
+    @parent_category_data = get_parent_category_data(subquery)
   end
 
   # Filter: year
@@ -120,6 +82,12 @@ class StatsController < ApplicationController
                                 .sum('expenses.amount')
     other_expenses = @total - areas_expenses(year: year).values.sum
     @areas_data = areas_expenses(year: year).merge('No area' => other_expenses)
+
+    subquery = Expense.get_expenses_by_period('year', year: year)
+                      .joins(:category)
+                      .group("categories.parent_id, COALESCE(categories.parent_id, categories.id)")
+                      .select("COALESCE(categories.parent_id, categories.id) AS category_id, SUM(amount) AS total_amount")
+    @parent_category_data = get_parent_category_data(subquery)
   end
 
   # Filter: max
@@ -139,6 +107,12 @@ class StatsController < ApplicationController
                                 .sum('expenses.amount')
     other_expenses = @total - areas_expenses.values.sum
     @areas_data = areas_expenses.merge('No area' => other_expenses)
+
+    subquery = Expense.all
+                      .joins(:category)
+                      .group("categories.parent_id, COALESCE(categories.parent_id, categories.id)")
+                      .select("COALESCE(categories.parent_id, categories.id) AS category_id, SUM(amount) AS total_amount")
+    @parent_category_data = get_parent_category_data(subquery)
   end
 
   def areas_expenses(month: nil, year: nil)
@@ -170,5 +144,12 @@ class StatsController < ApplicationController
     else
       Expense.all.sum(:amount)
     end
+  end
+
+  def get_parent_category_data(subquery)
+    Category.where(parent_id: nil)
+            .joins("LEFT JOIN (#{subquery.to_sql}) AS category_expenses ON categories.id = category_expenses.category_id")
+            .select("categories.name as category_name, COALESCE(category_expenses.total_amount, 0) as total_amount")
+            .map { |expense| [expense.category_name, expense.total_amount] }
   end
 end
