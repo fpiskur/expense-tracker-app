@@ -148,24 +148,36 @@ class StatsController < ApplicationController
     # period: day, selected month is in past
     # -> (@total / Time.days_in_month(month, year)).round(2)
 
+    # period: day, selected month is the oldest_month
+    # -> @total / (days since oldest to end of oldest_month).round(2)
+
     # period: day, selected month is current month
-    # -> @total / days past since beginning of month, including current day
+    # -> (@total / days past since beginning of month, including current day).round(2)
+
 
 
     # period: month, selected year is in past
     # -> (@total / 12).round(2)
 
+    # period: month, selected year is the oldest_year (no data from beginning, started mid-year)
+    # -> @total / (
+      # number of months from oldest to end of year, not including the oldest
+      # + (number of days from oldest_date to end of oldest_month / number of days in oldest_month)
+    # ).round(2)
+
     # period: month, selected year is current year
     # -> @total / (
       # months past since beggining of year, not including current month
       # + (days_since_beginning_of_month_including_current_day / number_of_days_in_current_month)
-    # )
+    # ).round(2)
+
+
 
     # period: year (max)
     # (@total / (
       # number of years between oldest and newest, not including oldest or newest
-      # + number of days since oldest_date to end of that year / number of days in that year
-      # + number of days since beggining of newest year to newest_date / number of days in that year
+      # + (number of days since oldest_date to end of that year / number of days in that year)
+      # + (number of days since beggining of newest year to newest_date / number of days in that year)
     # ).round(2)
   end
 end
