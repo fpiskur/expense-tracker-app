@@ -6,6 +6,8 @@ class StatsController < ApplicationController
     # GRAPH
     @filter = params[:period] || 'month' # 'month' / 'year' / 'max'
     period = map_filter_to_period[@filter]
+
+    @current_date = Date.current
     @oldest_date = Expense.oldest_date
     @newest_date = Expense.newest_date
     # group_by = 'category' / 'area'
@@ -138,16 +140,16 @@ class StatsController < ApplicationController
     if params[:month] && params[:year]
       @date = Date.new(params[:year].to_i, params[:month].to_i)
     elsif params[:year]
-      @date = Date.new(params[:year].to_i, Date.current.month)
+      @date = Date.new(params[:year].to_i, @current_date.month)
     else
-      @date = Date.current
+      @date = @current_date
     end
   end
 
   def get_average(period)
     if period == 'day'
       # selected month is in past
-      if @date.beginning_of_month < Date.current.beginning_of_month
+      if @date.beginning_of_month < @current_date.beginning_of_month
         (@total / Time.days_in_month(@date.month, @date.year)).round(2)
       # selected month is the oldest_month
       elsif @date.beginning_of_month == @oldest_date.beginning_of_month
@@ -158,7 +160,7 @@ class StatsController < ApplicationController
       end
     elsif period == 'month'
       # selected year is in past
-      if @date.year < Date.current.year
+      if @date.year < @current_date.year
         (@total / 12).round(2)
       # selected year is the oldest_year
       elsif @date.year == @oldest_date.year
@@ -171,8 +173,8 @@ class StatsController < ApplicationController
       # selected year is current year
       else
         (@total / (
-          Date.current.month - 1 + (
-            Date.current.day / Time.days_in_month(Date.current.month, Date.current.year)
+          @current_date.month - 1 + (
+            @current_date.day / Time.days_in_month(@current_date.month, @current_date.year)
           )
         )).round(2)
       end
