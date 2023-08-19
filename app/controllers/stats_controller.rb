@@ -6,8 +6,8 @@ class StatsController < ApplicationController
     # GRAPH
     @filter = params[:period] || 'month' # 'month' / 'year' / 'max'
     period = map_filter_to_period[@filter]
-    # range_start =
-    # range_end =
+    @oldest_date = Expense.oldest_date
+    @newest_date = Expense.newest_date
     # group_by = 'category' / 'area'
 
     # INFO
@@ -39,7 +39,7 @@ class StatsController < ApplicationController
     @heading = Date.new(year, month).strftime('%B %Y.')
 
     @total = Expense.get_total_for_period(month: month, year: year)
-    @total_average = (@total / Time.days_in_month(month, year)).round(2)
+    @total_average = get_average('day')
     @time_period = '€/day'
 
     @data = Expense.group_by_period('day', :date,
@@ -66,7 +66,7 @@ class StatsController < ApplicationController
     @heading = "#{year}."
 
     @total = Expense.get_total_for_period(year: year)
-    @total_average = (@total / 12).round(2)
+    @total_average = get_average('month')
     @time_period = '€/month'
 
     @data = Expense.group_by_period('month', :date,
@@ -88,13 +88,13 @@ class StatsController < ApplicationController
 
   # Filter: max
   def handle_year_period
-    min_year = Expense.oldest_date.year
-    max_year = Expense.newest_date.year
+    min_year = @oldest_date.year
+    max_year = @newest_date.year
 
     @heading = 'Max period'
 
     @total = Expense.get_total_for_period
-    @total_average = (@total / (Expense.oldest_date.year..Expense.newest_date.year).count).round(2)
+    @total_average = get_average('year')
     @time_period = '€/year'
 
     @data = Expense.group_by_period('year', :date,
@@ -144,40 +144,45 @@ class StatsController < ApplicationController
     end
   end
 
-  def get_average
-    # period: day, selected month is in past
-    # -> (@total / Time.days_in_month(month, year)).round(2)
-
-    # period: day, selected month is the oldest_month
-    # -> @total / (days since oldest to end of oldest_month).round(2)
-
-    # period: day, selected month is current month
-    # -> (@total / days past since beginning of month, including current day).round(2)
-
-
-
-    # period: month, selected year is in past
-    # -> (@total / 12).round(2)
-
-    # period: month, selected year is the oldest_year (no data from beginning, started mid-year)
-    # -> @total / (
-      # number of months from oldest to end of year, not including the oldest
-      # + (number of days from oldest_date to end of oldest_month / number of days in oldest_month)
-    # ).round(2)
-
-    # period: month, selected year is current year
-    # -> @total / (
-      # months past since beggining of year, not including current month
-      # + (days_since_beginning_of_month_including_current_day / number_of_days_in_current_month)
-    # ).round(2)
-
-
-
-    # period: year (max)
-    # (@total / (
-      # number of years between oldest and newest, not including oldest or newest
-      # + (number of days since oldest_date to end of that year / number of days in that year)
-      # + (number of days since beggining of newest year to newest_date / number of days in that year)
-    # ).round(2)
+  def get_average(period)
+    if period == 'day'
+      # selected month is in past
+      if @date.beginning_of_month < Date.current.beginning_of_month
+        (@total / Time.days_in_month(@date.month, @date.year)).round(2)
+      # selected month is the oldest_month
+      elsif @date.beginning_of_month == @oldest_date.beginning_of_month
+        (@total / (Time.days_in_month(@date.month, @date.year) - @date.day + 1)).round(2)
+      # selected month is current month
+      else
+        (@total / @date.day).round(2)
+      end
+    elsif period == 'month'
+      # selected year is in past
+      if @date.year < Date.current.year
+        (@total / 12).round(2)
+      # selected year is the oldest_year
+      elsif @date.year == @oldest_date.year
+        (@total / (
+          12 - @oldest_date.month + (
+            (Time.days_in_month(@oldest_date.month, @oldest_date.year) - @oldest_date.day + 1) \
+            / Time.days_in_month(@oldest_date.month, @oldest_date.year)
+          )
+        )).round(2)
+      # selected year is current year
+      else
+        (@total / (
+          Date.current.month - 1 + (
+            Date.current.day / Time.days_in_month(Date.current.month, Date.current.year)
+          )
+        )).round(2)
+      end
+    elsif period == 'year'
+      (@total / (
+        (@oldest_date.year..@newest_date.year).count - 2 + (
+          (((@oldest_date.end_of_year - @oldest_date).to_i + 1) / Time.days_in_year(@oldest_date.year)) \
+          + (((@newest_date - @newest_date.beginning_of_year).to_i + 1) / Time.days_in_year(@newest_date.year))
+        )
+      )).round(2)
+    end
   end
 end
