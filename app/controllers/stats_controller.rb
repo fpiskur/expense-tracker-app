@@ -37,7 +37,10 @@ class StatsController < ApplicationController
     month = @date.month
 
     @heading = Date.new(year, month).strftime('%B %Y.')
+
     @total = Expense.get_total_for_period(month: month, year: year)
+    @total_average = (@total / Time.days_in_month(month, year)).round(2)
+    @time_period = '€/day'
 
     @data = Expense.group_by_period('day', :date,
                                    range: Date.new(year, month)..Date.new(year, month).end_of_month)
@@ -61,7 +64,10 @@ class StatsController < ApplicationController
     year = @date.year
 
     @heading = "#{year}."
+
     @total = Expense.get_total_for_period(year: year)
+    @total_average = (@total / 12).round(2)
+    @time_period = '€/month'
 
     @data = Expense.group_by_period('month', :date,
                                      range: Date.new(year)..Date.new(year).end_of_year)
@@ -86,7 +92,10 @@ class StatsController < ApplicationController
     max_year = Expense.newest_date.year
 
     @heading = 'Max period'
+
     @total = Expense.get_total_for_period
+    @total_average = (@total / (Expense.oldest_date.year..Expense.newest_date.year).count).round(2)
+    @time_period = '€/year'
 
     @data = Expense.group_by_period('year', :date,
                                     range: Date.new(min_year)..Date.new(max_year).end_of_year)
@@ -133,5 +142,30 @@ class StatsController < ApplicationController
     else
       @date = Date.current
     end
+  end
+
+  def get_average
+    # period: day, selected month is in past
+    # -> (@total / Time.days_in_month(month, year)).round(2)
+
+    # period: day, selected month is current month
+    # -> @total / days past since beginning of month, including current day
+
+
+    # period: month, selected year is in past
+    # -> (@total / 12).round(2)
+
+    # period: month, selected year is current year
+    # -> @total / (
+      # months past since beggining of year, not including current month
+      # + (days_since_beginning_of_month_including_current_day / number_of_days_in_current_month)
+    # )
+
+    # period: year (max)
+    # (@total / (
+      # number of years between oldest and newest, not including oldest or newest
+      # + number of days since oldest_date to end of that year / number of days in that year
+      # + number of days since beggining of newest year to newest_date / number of days in that year
+    # ).round(2)
   end
 end
