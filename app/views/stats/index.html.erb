@@ -36,17 +36,37 @@
     <div class='categories'>
       <h2>Categories</h2>
       <div class='charts'>
-        <%= pie_chart @parent_category_data %>
-        <%= pie_chart @sub_category_data %>
+        <%= pie_chart @parent_category_data, suffix: " €", round: 2, zeros: true %>
+        <%= pie_chart @sub_category_data, suffix: " €", round: 2, zeros: true %>
       </div>
     </div>
     <div class='areas'>
       <h2>Areas</h2>
-      <%= pie_chart @areas_data %>
+      <%= pie_chart @areas_data, suffix: " €", round: 2, zeros: true %>
     </div>
   </div>
   <aside class='aside'>
-    <p>TOTAL: <%= @total %> €</p>
-    <p>AVERAGE: <%= @total_average %> <%= @time_period %></p>
+    <h3>TOTAL</h3>
+    <p><strong><%= @total %> €</strong></p>
+    <h3>TOTAL AVERAGE</h3>
+    <p><strong><%= @total_average %> <%= @time_period %></strong></p>
+    <div>
+      <h3>Category averages</h3>
+      <% @parent_category_data.each do |sub_cat, sum| %>
+        <p><strong><%= "#{sub_cat}:" %></strong> <%= "#{format("%.2f", (sum/@average_divider).round(2))} #{@time_period}" %></p>
+      <% end %>
+    </div>
+    <div>
+      <h3>Sub-category averages</h3>
+      <% @sub_category_data.each do |sub_cat, sum| %>
+        <p><strong><%= "#{sub_cat}:" %></strong> <%= "#{format("%.2f", (sum/@average_divider).round(2))} #{@time_period}" %></p>
+      <% end %>
+    </div>
+    <div>
+      <h3>Area averages</h3>
+      <% @areas_data.each do |area, sum| %>
+        <p><strong><%= "#{area}:" %></strong> <%= "#{format("%.2f", (sum/@average_divider).round(2))} #{@time_period}" %></p>
+      <% end %>
+    </div>
   </aside>
 </div>
