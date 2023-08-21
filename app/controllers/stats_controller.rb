@@ -1,5 +1,6 @@
 class StatsController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_current_date
   before_action :set_date
 
   def index
@@ -7,7 +8,6 @@ class StatsController < ApplicationController
     @filter = params[:period] || 'month' # 'month' / 'year' / 'max'
     period = map_filter_to_period[@filter]
 
-    @current_date = Date.current
     @oldest_date = Expense.oldest_date
     @newest_date = Expense.newest_date
     # group_by = 'category' / 'area'
@@ -134,6 +134,10 @@ class StatsController < ApplicationController
       'year' => 'month',
       'max' => 'year'
     }
+  end
+
+  def set_current_date
+    @current_date = Date.current
   end
 
   def set_date
