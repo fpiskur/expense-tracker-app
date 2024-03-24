@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class StatsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_current_date
@@ -46,8 +48,8 @@ class StatsController < ApplicationController
     @time_period = '€/day'
 
     @data = Expense.group_by_period('day', :date,
-                                   range: Date.new(year, month)..Date.new(year, month).end_of_month)
-                                   .sum(:amount)
+                                    range: Date.new(year, month)..Date.new(year, month).end_of_month)
+                   .sum(:amount)
     @sub_category_data = Expense.get_expenses_by_period('month', month: month, year: year)
                                 .joins(:category)
                                 .group('categories.name')
@@ -57,8 +59,8 @@ class StatsController < ApplicationController
 
     subquery = Expense.get_expenses_by_period('month', month: month, year: year)
                       .joins(:category)
-                      .group("categories.parent_id, COALESCE(categories.parent_id, categories.id)")
-                      .select("COALESCE(categories.parent_id, categories.id) AS category_id, SUM(amount) AS total_amount")
+                      .group('categories.parent_id, COALESCE(categories.parent_id, categories.id)')
+                      .select('COALESCE(categories.parent_id, categories.id) AS category_id, SUM(amount) AS total_amount')
     @parent_category_data = get_parent_category_data(subquery)
   end
 
@@ -74,8 +76,8 @@ class StatsController < ApplicationController
     @time_period = '€/mo'
 
     @data = Expense.group_by_period('month', :date,
-                                     range: Date.new(year)..Date.new(year).end_of_year)
-                                     .sum(:amount)
+                                    range: Date.new(year)..Date.new(year).end_of_year)
+                   .sum(:amount)
     @sub_category_data = Expense.get_expenses_by_period('year', year: year)
                                 .joins(:category)
                                 .group('categories.name')
@@ -85,8 +87,8 @@ class StatsController < ApplicationController
 
     subquery = Expense.get_expenses_by_period('year', year: year)
                       .joins(:category)
-                      .group("categories.parent_id, COALESCE(categories.parent_id, categories.id)")
-                      .select("COALESCE(categories.parent_id, categories.id) AS category_id, SUM(amount) AS total_amount")
+                      .group('categories.parent_id, COALESCE(categories.parent_id, categories.id)')
+                      .select('COALESCE(categories.parent_id, categories.id) AS category_id, SUM(amount) AS total_amount')
     @parent_category_data = get_parent_category_data(subquery)
   end
 
@@ -104,7 +106,7 @@ class StatsController < ApplicationController
 
     @data = Expense.group_by_period('year', :date,
                                     range: Date.new(min_year)..Date.new(max_year).end_of_year)
-                                    .sum(:amount)
+                   .sum(:amount)
     @sub_category_data = Expense.all
                                 .joins(:category)
                                 .group('categories.name')
@@ -114,8 +116,8 @@ class StatsController < ApplicationController
 
     subquery = Expense.all
                       .joins(:category)
-                      .group("categories.parent_id, COALESCE(categories.parent_id, categories.id)")
-                      .select("COALESCE(categories.parent_id, categories.id) AS category_id, SUM(amount) AS total_amount")
+                      .group('categories.parent_id, COALESCE(categories.parent_id, categories.id)')
+                      .select('COALESCE(categories.parent_id, categories.id) AS category_id, SUM(amount) AS total_amount')
     @parent_category_data = get_parent_category_data(subquery)
   end
 
@@ -127,7 +129,7 @@ class StatsController < ApplicationController
   def get_parent_category_data(subquery)
     Category.where(parent_id: nil)
             .joins("LEFT JOIN (#{subquery.to_sql}) AS category_expenses ON categories.id = category_expenses.category_id")
-            .select("categories.name as category_name, COALESCE(category_expenses.total_amount, 0) as total_amount")
+            .select('categories.name as category_name, COALESCE(category_expenses.total_amount, 0) as total_amount')
             .map { |expense| [expense.category_name, expense.total_amount] }
   end
 
@@ -140,17 +142,17 @@ class StatsController < ApplicationController
   end
 
   def set_current_date
-    @current_date = Date.current
+    @current_date ||= Date.current
   end
 
   def set_date
-    if params[:month] && params[:year]
-      @date = Date.new(params[:year].to_i, params[:month].to_i)
-    elsif params[:year]
-      @date = Date.new(params[:year].to_i, @current_date.month)
-    else
-      @date = @current_date
-    end
+    @date = if params[:month] && params[:year]
+              Date.new(params[:year].to_i, params[:month].to_i)
+            elsif params[:year]
+              Date.new(params[:year].to_i, @current_date.month)
+            else
+              @current_date
+            end
   end
 
   def get_average(period)
