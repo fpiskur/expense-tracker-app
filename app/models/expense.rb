@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Expense < ApplicationRecord
   belongs_to :category
   accepts_nested_attributes_for :category
@@ -10,15 +12,9 @@ class Expense < ApplicationRecord
   validates_presence_of :amount, :date, :description, :category_id
 
   def self.get_expenses_by_period(period, **options)
-    if period == 'year' || period == 'month'
-      expenses = where("EXTRACT(YEAR FROM date) = ?", options[:year])
-    end
-    if period == 'month'
-      expenses = expenses.where("EXTRACT(MONTH FROM date) = ?", options[:month])
-    end
-    if options[:ordered]
-      expenses = expenses.order(date: :desc, created_at: :desc)
-    end
+    expenses = where('EXTRACT(YEAR FROM date) = ?', options[:year]) if %w[year month].include?(period)
+    expenses = expenses.where('EXTRACT(MONTH FROM date) = ?', options[:month]) if period == 'month'
+    expenses = expenses.order(date: :desc, created_at: :desc) if options[:ordered]
     expenses
   end
 
@@ -62,8 +58,8 @@ class Expense < ApplicationRecord
 
   # Validations
   def parent_category_with_children_selected
-    if self.category&.sub_categories&.any?
-      errors.add(:category, 'has sub-categories. Please pick one.')
-    end
+    return unless category&.sub_categories&.any?
+
+    errors.add(:category, 'has sub-categories. Please pick one.')
   end
 end
