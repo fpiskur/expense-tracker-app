@@ -26,11 +26,12 @@ class StatsController < ApplicationController
   private
 
   def get_relevant_data(period)
-    if period == 'day'
+    case period
+    when 'day'
       handle_day_period
-    elsif period == 'month'
+    when 'month'
       handle_month_period
-    elsif period == 'year'
+    when 'year'
       handle_year_period
     end
   end
