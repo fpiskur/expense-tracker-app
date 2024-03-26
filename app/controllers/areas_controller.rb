@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class AreasController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_area, only: [:show, :edit, :update, :destroy]
+  before_action :set_area, only: %i[show edit update destroy]
 
   def index
     @areas = Area.all

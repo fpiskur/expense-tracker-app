@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 class CategoriesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_category, only: [:show, :edit, :update, :destroy]
-  before_action :set_parent_categories, only: [:new, :create, :edit, :update]
+  before_action :set_category, only: %i[show edit update destroy]
+  before_action :set_parent_categories, only: %i[new create edit update]
 
   def index
     @categories = Category.all
@@ -52,4 +54,3 @@ class CategoriesController < ApplicationController
     params.require(:category).permit(:name, :parent_id)
   end
 end
-
