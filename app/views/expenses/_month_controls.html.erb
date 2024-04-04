@@ -18,7 +18,7 @@
         </div>
         <div class='year'>
           <%= f.label :year %>
-          <%= f.select :year, (2019..2023).to_a, selected: @date.year %>
+          <%= f.select :year, (@oldest_date.year..@newest_date.year).to_a, selected: @date.year %>
         </div>
       </div>
       <div class='buttons'>

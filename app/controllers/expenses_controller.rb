@@ -18,6 +18,8 @@ class ExpensesController < ApplicationController
             end
     @expenses = Expense.get_expenses_by_period('month', month: @date.month, year: @date.year, ordered: true)
                        .group_by(&:date)
+    @oldest_date = Expense.oldest_date
+    @newest_date = Expense.newest_date
   end
 
   def show; end
