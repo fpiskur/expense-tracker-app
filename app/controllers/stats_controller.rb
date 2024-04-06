@@ -7,8 +7,7 @@ class StatsController < ApplicationController
 
   def index
     # GRAPH
-    @filter = params[:period] || 'month' # 'month' / 'year' / 'max'
-    period = map_filter_to_period[@filter]
+    @period = params[:period] || 'day' # 'month' / 'year' / 'max'
 
     @oldest_date = Expense.oldest_date
     @newest_date = Expense.newest_date
@@ -20,7 +19,7 @@ class StatsController < ApplicationController
     # GENERAL
     @heading = 'Something went wrong, check the StatsController'
 
-    get_relevant_data(period)
+    get_relevant_data(@period)
   end
 
   private
@@ -132,14 +131,6 @@ class StatsController < ApplicationController
             .joins("LEFT JOIN (#{subquery.to_sql}) AS category_expenses ON categories.id = category_expenses.category_id")
             .select('categories.name as category_name, COALESCE(category_expenses.total_amount, 0) as total_amount')
             .map { |expense| [expense.category_name, expense.total_amount] }
-  end
-
-  def map_filter_to_period
-    {
-      'month' => 'day',
-      'year' => 'month',
-      'max' => 'year'
-    }
   end
 
   def set_current_date

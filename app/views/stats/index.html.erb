@@ -1,9 +1,9 @@
 <div class='header'>
   <h1><%= @heading %></h1>
-  <% unless @filter == 'max' %>
+  <% unless @period == 'year' %>
     <div class='controls'>
       <%= form_with url: stats_path, method: :get do |f| %>
-        <% if @filter == 'month' %>
+        <% if @period == 'day' %>
           <%= f.label :month %>
           <%= f.select :month, (1..12).map { |month| [Date::MONTHNAMES[month], month] }, selected: @date.month %>
         <% end %>
@@ -11,23 +11,23 @@
         <%= f.label :year %>
         <%= f.select :year, (@oldest_date.year..@newest_date.year).to_a, selected: @date.year %>
 
-        <%= f.hidden_field :period, value: @filter %>
+        <%= f.hidden_field :period, value: @period %>
 
         <%= f.submit "Submit" %>
       <% end %>
     </div>
   <% end %>
   <div class='stats-filter'>
-    <%= link_to 'month', stats_path(period: 'month'), class: "btn btn--light #{'active' if @filter == 'month'}" %>
-    <%= link_to 'year', stats_path(period: 'year'), class: "btn btn--light #{'active' if @filter == 'year'}" %>
-    <%= link_to 'max', stats_path(period: 'max'), class: "btn btn--light #{'active' if @filter == 'max'}" %>
+    <%= link_to 'month', stats_path(period: 'day'), class: "btn btn--light #{'active' if @period == 'day'}" %>
+    <%= link_to 'year', stats_path(period: 'month'), class: "btn btn--light #{'active' if @period == 'month'}" %>
+    <%= link_to 'max', stats_path(period: 'year'), class: "btn btn--light #{'active' if @period == 'year'}" %>
   </div>
 </div>
 
 <div class='stats'>
   <div class='chart'>
     <div class='totals'>
-      <% if @filter == 'month' %>
+      <% if @period == 'day' %>
         <%= column_chart @data, suffix: " €", round: 2, zeros: true %>
       <% else %>
         <%= line_chart @data, curve: false, suffix: " €", round: 2, zeros: true %>
