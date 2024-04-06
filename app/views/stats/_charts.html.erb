@@ -1,0 +1,20 @@
+<div class='charts'>
+  <div class='totals'>
+    <% if @period == 'day' %>
+      <%= column_chart @data, suffix: " €", round: 2, zeros: true %>
+    <% else %>
+      <%= line_chart @data, curve: false, suffix: " €", round: 2, zeros: true %>
+    <% end %>
+  </div>
+  <div class='categories'>
+    <h2>Categories</h2>
+    <div class='category-charts'>
+      <%= pie_chart @parent_category_data, suffix: " €", round: 2, zeros: true %>
+      <%= pie_chart @sub_category_data, suffix: " €", round: 2, zeros: true %>
+    </div>
+  </div>
+  <div class='areas'>
+    <h2>Areas</h2>
+    <%= pie_chart @areas_data, suffix: " €", round: 2, zeros: true %>
+  </div>
+</div>

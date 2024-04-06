@@ -3,7 +3,7 @@
   gap: var(--space-m);
   margin-bottom: var(--space-l);
 
-  .chart,
+  .charts,
   .aside {
     background-color: var(--color-white);
     border-radius: var(--border-radius);
@@ -11,7 +11,7 @@
     padding: var(--space-l);
   }
 
-  .chart {
+  .charts {
     width: 75%;
 
     .categories,
@@ -23,7 +23,7 @@
       }
     }
 
-    .categories .charts {
+    .categories .category-charts {
       display: flex;
       gap: var(--space-m);
       justify-content: space-between;
