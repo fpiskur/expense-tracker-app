@@ -4,46 +4,18 @@ class StatsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_current_date
   before_action :set_date
+  before_action :setup_data
 
-  def index
-    # GRAPH
-    @period = params[:period] || 'day' # 'month' / 'year' / 'max'
+  def month
+    @period = 'day'
 
-    @oldest_date = Expense.oldest_date
-    @newest_date = Expense.newest_date
-    # group_by = 'category' / 'area'
-
-    # INFO
-    # info = 'sum/total' / 'average'
-
-    # GENERAL
-    @heading = 'Something went wrong, check the StatsController'
-
-    get_relevant_data(@period)
-  end
-
-  private
-
-  def get_relevant_data(period)
-    case period
-    when 'day'
-      handle_day_period
-    when 'month'
-      handle_month_period
-    when 'year'
-      handle_year_period
-    end
-  end
-
-  # Filter: month
-  def handle_day_period
     year = @date.year
     month = @date.month
 
     @heading = Date.new(year, month).strftime('%B %Y.')
 
     @total = Expense.get_total_for_period(month: month, year: year)
-    @total_average = get_average('day')
+    @total_average = get_average(@period)
     @average_divider = days_in_month(@date)
     @time_period = '€/day'
 
@@ -62,16 +34,18 @@ class StatsController < ApplicationController
                       .group('categories.parent_id, COALESCE(categories.parent_id, categories.id)')
                       .select('COALESCE(categories.parent_id, categories.id) AS category_id, SUM(amount) AS total_amount')
     @parent_category_data = get_parent_category_data(subquery)
+    render :index
   end
 
-  # Filter: year
-  def handle_month_period
+  def year
+    @period = 'month'
+
     year = @date.year
 
     @heading = "#{year}."
 
     @total = Expense.get_total_for_period(year: year)
-    @total_average = get_average('month')
+    @total_average = get_average(@period)
     @average_divider = 12 # months in year
     @time_period = '€/mo'
 
@@ -90,17 +64,19 @@ class StatsController < ApplicationController
                       .group('categories.parent_id, COALESCE(categories.parent_id, categories.id)')
                       .select('COALESCE(categories.parent_id, categories.id) AS category_id, SUM(amount) AS total_amount')
     @parent_category_data = get_parent_category_data(subquery)
+    render :index
   end
 
-  # Filter: max
-  def handle_year_period
+  def max
+    @period = 'year'
+
     min_year = @oldest_date.year
     max_year = @newest_date.year
 
     @heading = 'Max period'
 
     @total = Expense.get_total_for_period
-    @total_average = get_average('year')
+    @total_average = get_average(@period)
     @average_divider = total_num_of_years
     @time_period = '€/yr'
 
@@ -119,7 +95,10 @@ class StatsController < ApplicationController
                       .group('categories.parent_id, COALESCE(categories.parent_id, categories.id)')
                       .select('COALESCE(categories.parent_id, categories.id) AS category_id, SUM(amount) AS total_amount')
     @parent_category_data = get_parent_category_data(subquery)
+    render :index
   end
+
+  private
 
   def get_areas_data(areas_expenses, total)
     other_expenses = total - areas_expenses.values.sum
@@ -134,7 +113,7 @@ class StatsController < ApplicationController
   end
 
   def set_current_date
-    @current_date ||= Date.current
+    @current_date = Date.current
   end
 
   def set_date
@@ -145,6 +124,13 @@ class StatsController < ApplicationController
             else
               @current_date
             end
+  end
+
+  def setup_data
+    @oldest_date = Expense.oldest_date
+    @newest_date = Expense.newest_date
+
+    @heading = 'Something went wrong, check the StatsController'
   end
 
   def get_average(period)

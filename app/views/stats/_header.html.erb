@@ -2,7 +2,7 @@
   <h1><%= @heading %></h1>
   <% unless @period == 'year' %>
     <div class='controls'>
-      <%= form_with url: stats_path, method: :get do |f| %>
+      <%= form_with url: request.fullpath, method: :get do |f| %>
         <% if @period == 'day' %>
           <%= f.label :month %>
           <%= f.select :month, (1..12).map { |month| [Date::MONTHNAMES[month], month] }, selected: @date.month %>
@@ -18,8 +18,8 @@
     </div>
   <% end %>
   <div class='stats-filter'>
-    <%= link_to 'month', stats_path(period: 'day'), class: "btn btn--light #{'active' if @period == 'day'}" %>
-    <%= link_to 'year', stats_path(period: 'month'), class: "btn btn--light #{'active' if @period == 'month'}" %>
-    <%= link_to 'max', stats_path(period: 'year'), class: "btn btn--light #{'active' if @period == 'year'}" %>
+    <%= link_to 'month', stats_month_path, class: "btn btn--light #{'active' if @period == 'day'}" %>
+    <%= link_to 'year', stats_year_path, class: "btn btn--light #{'active' if @period == 'month'}" %>
+    <%= link_to 'max', stats_max_path, class: "btn btn--light #{'active' if @period == 'year'}" %>
   </div>
 </div>
