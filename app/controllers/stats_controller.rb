@@ -129,8 +129,6 @@ class StatsController < ApplicationController
   def setup_data
     @oldest_date = Expense.oldest_date
     @newest_date = Expense.newest_date
-
-    @heading = 'Something went wrong, check the StatsController'
   end
 
   def get_average(period)
