@@ -2,7 +2,6 @@
 
 class StatsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_current_date
   before_action :set_date
   before_action :setup_data
 
@@ -112,7 +111,7 @@ class StatsController < ApplicationController
             .map { |expense| [expense.category_name, expense.total_amount] }
   end
 
-  def set_current_date
+  def current_date
     @current_date = Date.current
   end
 
@@ -120,9 +119,9 @@ class StatsController < ApplicationController
     @date = if params[:month] && params[:year]
               Date.new(params[:year].to_i, params[:month].to_i)
             elsif params[:year]
-              Date.new(params[:year].to_i, @current_date.month)
+              Date.new(params[:year].to_i, current_date.month)
             else
-              @current_date
+              current_date
             end
   end
 
@@ -134,7 +133,7 @@ class StatsController < ApplicationController
   def get_average(period)
     if period == 'day'
       # selected month is in past
-      if @date.beginning_of_month < @current_date.beginning_of_month
+      if @date.beginning_of_month < current_date.beginning_of_month
         (@total / days_in_month(@date)).round(2)
       # selected month is the oldest_month
       elsif @date.beginning_of_month == @oldest_date.beginning_of_month
@@ -145,7 +144,7 @@ class StatsController < ApplicationController
       end
     elsif period == 'month'
       # selected year is in past
-      if @date.year < @current_date.year
+      if @date.year < current_date.year
         (@total / 12).round(2)
       # selected year is the oldest_year
       elsif @date.year == @oldest_date.year
@@ -158,8 +157,8 @@ class StatsController < ApplicationController
       # selected year is current year
       else
         (@total / (
-          @current_date.month - 1 + (
-            @current_date.day / days_in_month(@current_date)
+          current_date.month - 1 + (
+            current_date.day / days_in_month(current_date)
           )
         )).round(2)
       end
