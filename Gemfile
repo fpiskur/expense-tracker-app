@@ -47,6 +47,10 @@ gem "bootsnap", require: false
 
 gem 'devise'
 
+gem 'chartkick'
+gem 'groupdate'
+gem 'erb_lint'
+
 # Use Sass to process CSS
 # gem "sassc-rails"
 

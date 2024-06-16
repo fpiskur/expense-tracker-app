@@ -4,4 +4,9 @@
       @content;
     }
   }
+  @if $query ==tabletAndDown {
+    @media (max-width: 49rem) {
+      @content;
+    }
+  }
 }

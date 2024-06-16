@@ -1,24 +1,25 @@
+# frozen_string_literal: true
+
 class ExpensesController < ApplicationController
-  before_action :set_expense, only: [:show, :edit, :update, :destroy]
-  before_action :set_categories, only: [:new, :create, :edit, :update]
-  before_action :set_areas, only: [:new, :create, :edit, :update]
+  before_action :authenticate_user!
+  before_action :set_expense, only: %i[show edit update destroy]
+  before_action :set_categories, only: %i[new create edit update]
+  before_action :set_areas, only: %i[new create edit update]
 
   def index
-    if params[:month] && params[:year]
-      @date = Date.new(params[:year].to_i, params[:month].to_i)
-      @expenses = Expense.get_expenses_by_date(month: params[:month], year: params[:year])
-    elsif params[:month].nil? && params[:year]
-      @date = Date.new(params[:year].to_i, Date.current.month)
-      @expenses = Expense.get_expenses_by_date(year: params[:year])
-    elsif params[:month] && params[:year].nil?
-      @date = Date.new(Date.current.year, params[:month].to_i)
-      @expenses = Expense.get_expenses_by_date(month: params[:month])
-    else
-      @date = Date.new(Date.current.year, Date.current.month)
-      @expenses = Expense.get_expenses_by_date(month: Date.current.month)
-    end
-
-    @expenses = @expenses.group_by(&:date)
+    @date = if params[:month] && params[:year]
+              Date.new(params[:year].to_i, params[:month].to_i)
+            # elsif params[:month].nil? && params[:year]
+            #   Date.new(params[:year].to_i, Date.current.month)
+            # elsif params[:month] && params[:year].nil?
+            #   Date.new(Date.current.year, params[:month].to_i)
+            else
+              Date.new(Date.current.year, Date.current.month)
+            end
+    @expenses = Expense.get_expenses_by_period('month', month: @date.month, year: @date.year, ordered: true)
+                       .group_by(&:date)
+    @oldest_date = Expense.oldest_date
+    @newest_date = Expense.newest_date
   end
 
   def show; end
