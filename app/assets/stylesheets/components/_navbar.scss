@@ -37,4 +37,13 @@
   &__user-actions {
     margin-left: auto;
   }
+
+  @include media(tabletAndDown) {
+    flex-wrap: wrap;
+    gap: 0 var(--space-xl);
+
+    &__menu {
+      order: 1;
+    }
+  }
 }

@@ -33,4 +33,21 @@
   .aside {
     width: 25%;
   }
+
+  @include media(tabletAndDown) {
+    flex-direction: column;
+
+    .charts {
+      width: 100%;
+
+      .categories .category-charts {
+        flex-direction: column;
+      }
+    }
+
+    .aside {
+      width: 100%;
+    }
+  }
 }
+
