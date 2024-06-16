@@ -175,7 +175,7 @@ GEM
       racc
     pg (1.5.3)
     public_suffix (5.0.1)
-    puma (5.6.6)
+    puma (6.4.2)
       nio4r (~> 2.0)
     racc (1.7.1)
     rack (2.2.7)
@@ -310,8 +310,8 @@ DEPENDENCIES
   jbuilder
   jsbundling-rails
   pg (~> 1.1)
-  puma (~> 5.0)
-  rails (~> 7.0.5)
+  puma (>= 5.6.8)
+  rails (~> 7.0.6)
   rspec-rails
   selenium-webdriver
   sprockets-rails
