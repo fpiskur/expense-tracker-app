@@ -73,7 +73,45 @@ RSpec.describe Expense, type: :model do
   end
 
   context '.get_expenses_by_area' do
-    it 'returns the correct result'
+    let(:first_area) { create(:area, name: 'First Area') }
+    let(:second_area) { create(:area, name: 'Second Area') }
+
+    before do
+      create(:expense, amount: 10, date: '2024-01-23', area_ids: [first_area.id])
+      create(:expense, amount: 20, date: '2024-01-25', area_ids: [first_area.id])
+      create(:expense, amount: 5, date: '2024-02-12', area_ids: [first_area.id])
+      create(:expense, amount: 45, date: '2024-03-04', area_ids: [first_area.id])
+      create(:expense, amount: 25, date: '2024-03-14', area_ids: [first_area.id])
+
+      create(:expense, amount: 25, date: '2024-01-03', area_ids: [second_area.id])
+      create(:expense, amount: 35, date: '2024-01-23', area_ids: [second_area.id])
+      create(:expense, amount: 100, date: '2024-05-11', area_ids: [second_area.id])
+      create(:expense, amount: 10, date: '2024-05-16', area_ids: [second_area.id])
+      create(:expense, amount: 15, date: '2024-08-20', area_ids: [second_area.id])
+
+      create(:expense, amount: 300, date: '2025-06-23', area_ids: [second_area.id])
+    end
+
+    it 'returns the correct result for month' do
+      result = described_class.get_expenses_by_area(month: 1, year: 2024)
+      expect(result.keys).to eq([first_area.name, second_area.name])
+      expect(result[first_area.name]).to eq(30)
+      expect(result[second_area.name]).to eq(60)
+    end
+
+    it 'returns the correct result for year' do
+      result = described_class.get_expenses_by_area(year: 2024)
+      expect(result.keys).to eq([first_area.name, second_area.name])
+      expect(result[first_area.name]).to eq(105)
+      expect(result[second_area.name]).to eq(185)
+    end
+
+    it 'returns the correct result for all-time' do
+      result = described_class.get_expenses_by_area
+      expect(result.keys).to eq([first_area.name, second_area.name])
+      expect(result[first_area.name]).to eq(105)
+      expect(result[second_area.name]).to eq(485)
+    end
   end
 
   context '.get_total_for_period' do
