@@ -16,6 +16,10 @@ RSpec.describe Expense, type: :model do
     let(:parent_category) { create(:category) }
     let(:child_category) { create(:category, parent_id: parent_category.id) }
 
+    it 'is valid with valid arguments' do
+      expect(subject).to be_valid
+    end
+
     it 'is not valid without the amount' do
       subject.amount = nil
       expect(subject).to_not be_valid
@@ -36,11 +40,7 @@ RSpec.describe Expense, type: :model do
       expect(subject).to_not be_valid
     end
 
-    it 'is valid with valid arguments' do
-      expect(subject).to be_valid
-    end
-
-    it "is not valid if parent category is selected instead of it's child" do
+    it 'is not valid if parent category is selected that contains children' do
       subject.category = parent_category
       expect(subject).to_not be_valid
     end
