@@ -146,11 +146,20 @@ RSpec.describe Expense, type: :model do
     end
   end
 
-  context '.oldest_date' do
-    it 'retutns the oldest date'
-  end
+  context '.oldest_date & .newest_date' do
+    before do
+      create(:expense, date: '2024-04-12')
+      create(:expense, date: '2024-08-22')
+      create(:expense, date: '2023-11-05')
+      create(:expense, date: '2023-12-15')
+    end
 
-  context '.newest_date' do
-    it 'returns the newest date'
+    it 'returns the oldest date' do
+      expect(described_class.oldest_date).to eq(Date.new(2023, 11, 5))
+    end
+
+    it 'returns the newest date' do
+      expect(described_class.newest_date).to eq(Date.new(2024, 8, 22))
+    end
   end
 end
