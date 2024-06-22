@@ -115,7 +115,35 @@ RSpec.describe Expense, type: :model do
   end
 
   context '.get_total_for_period' do
-    it 'returns the correct result'
+    let(:first_area) { create(:area, name: 'First Area') }
+    let(:second_area) { create(:area, name: 'Second Area') }
+
+    before do
+      create(:expense, amount: 10, date: '2024-01-23', area_ids: [first_area.id])
+      create(:expense, amount: 20, date: '2024-01-25', area_ids: [first_area.id])
+      create(:expense, amount: 5, date: '2024-02-12', area_ids: [first_area.id])
+
+      create(:expense, amount: 25, date: '2024-01-03', area_ids: [second_area.id])
+      create(:expense, amount: 35, date: '2024-01-23', area_ids: [second_area.id])
+      create(:expense, amount: 100, date: '2024-05-11', area_ids: [second_area.id])
+
+      create(:expense, amount: 300, date: '2025-06-23', area_ids: [second_area.id])
+    end
+
+    it 'returns the correct result for month' do
+      result = described_class.get_total_for_period(month: 1, year: 2024)
+      expect(result).to eq(90)
+    end
+
+    it 'returns the correct result for year' do
+      result = described_class.get_total_for_period(year: 2024)
+      expect(result).to eq(195)
+    end
+
+    it 'returns the correct result for all-time' do
+      result = described_class.get_total_for_period
+      expect(result).to eq(495)
+    end
   end
 
   context '.oldest_date' do
