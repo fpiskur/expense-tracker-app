@@ -125,8 +125,8 @@ class StatsController < ApplicationController
   end
 
   def setup_data
-    @oldest_date = Expense.oldest_date || current_date
-    @newest_date = Expense.newest_date || current_date
+    @oldest_date = Expense.oldest_date
+    @newest_date = Expense.newest_date
   end
 
   def get_average(period)

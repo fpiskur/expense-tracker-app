@@ -21,7 +21,7 @@ class ExpensesController < ApplicationController
     @newest_date = Expense.newest_date
   end
 
-  def show; end
+  # def show; end
 
   def new
     @expense = Expense.new

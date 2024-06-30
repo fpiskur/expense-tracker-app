@@ -47,11 +47,11 @@ class Expense < ApplicationRecord
   end
 
   def self.oldest_date
-    Expense.order(date: :asc).limit(1).first&.date
+    Expense.order(date: :asc).limit(1).first&.date || Date.current
   end
 
   def self.newest_date
-    Expense.order(date: :desc).limit(1).first&.date
+    Expense.order(date: :desc).limit(1).first&.date || Date.current
   end
 
   private
